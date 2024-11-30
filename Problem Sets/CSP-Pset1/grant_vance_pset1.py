@@ -454,7 +454,7 @@ def p_unfair_coin(n, g, p, n_heads, n_flips):
 
 #Problem MC3
 def draw_all_good_cards(n, g, turn):
-	simulations = 100000
+	simulations = 1000000
 	successes = 0
 
 	for i in range(simulations):
