@@ -34,7 +34,7 @@ To get started with the code in this repository, follow these steps:
 1. **Clone the Repository:**
    Open your terminal or command prompt and run:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/laclustr/CSP/
 2. **Explore the Structure:**
   - Problem Sets: For structured assignments and challenges.
   - Lessons: To dive into learning resources.
