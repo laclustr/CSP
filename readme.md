@@ -51,20 +51,6 @@ To get started with the code in this repository, follow these steps:
   - Expand on the projects to sharpen your coding skills
 ---
 
-## **Highlights**
-
-**Custom Utilities:**
-  - Implemented a upper_string(string) function that converts strings to uppercase, showcasing foundational programming skills.
-**Interactive Programs:**
-  - Built small games and utilities for interactive learning and fun.
-**Creative Problem-Solving:**
-  - Designed unique and unconventional solutions to coding challenges.
----
-
-## **Reflections**
-
-This portfolio reflects my journey through AP Computer Science Principles. It highlights not only my technical growth but also my creativity and passion for coding. Each folder represents a step forward in my learning experience.
-
 ## **Contact Information**
 
 **Name:** Grant \
