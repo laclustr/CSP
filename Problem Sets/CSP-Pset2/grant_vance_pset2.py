@@ -1,6 +1,5 @@
 import random
 from audio_csp import audio_csp as acsp
-import numpy as np
 
 #Problem 1
 def reverse_list(lis):
@@ -499,6 +498,15 @@ def triad_CEG():
 		combined[i] = C[i] + E[i] + G[i]
 
 	acsp.save_song("triad_CEG_p6.wav", combined)
+#End AF Problem 6
+
+def lim_list(song):
+	for i in range(len(song)):
+		if song[i] > 32767:
+			song[i] = 32767
+		elif song[i] < -32768:
+			song[i] = -32768
+	return song
 
 #AF Problem 7
 def triad_ACE():
@@ -510,7 +518,8 @@ def triad_ACE():
 	for i in range(len(A)):
 		combined[i] = A[i] + C[i] + E[i]
 
-	combined.song_arr = np.clip(combined.song_arr, -32768, 32767)
+	combined.song_arr = lim_list(combined.song_arr)
+
 	acsp.save_song("triad_ACE_p7.wav", combined)
 
 #AF Problem 8
@@ -527,8 +536,10 @@ def bass_boosted_and_sped_up():
 	dataL = acsp.get_frequency_data(carnivalL)
 	dataR = acsp.get_frequency_data(carnivalR)
 
-	freqL, amplL = dataL
-	freqR, amplR = dataR
+	freqL = dataL[0]
+	amplL = dataL[1]
+	freqR = dataR[0]
+	amplR = dataR[1]
 
 	for i in range(len(freqL)):
 		if 0 < freqL[i] < 150:
@@ -540,25 +551,7 @@ def bass_boosted_and_sped_up():
 	acsp.goto_time_domain(carnivalL)
 	acsp.goto_time_domain(carnivalR)
 
-
-	carnivalL.song_arr = np.clip(carnivalL.song_arr, -32768, 32767)
-	carnivalR.song_arr = np.clip(carnivalR.song_arr, -32768, 32767)
+	carnivalL.song_arr = lim_list(carnivalL.song_arr)
+	carnivalR.song_arr = lim_list(carnivalR.song_arr)
 
 	acsp.save_song("carnival_bass_boosted_and_sped_up_p8.wav", carnivalL, carnivalR)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

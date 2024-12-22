@@ -180,12 +180,6 @@ class Song:
 
 		print(f"Writing {file_path}...")
 		with wave.open(file_path, "wb") as wav_file:
-
-			"""
-			Ask Dr. B!!!!!!
-			"""
-			self.song_arr = np.clip(self.song_arr, -32768, 32767)
-
 			# Set WAV file parameters
 			wav_file.setnchannels(n_channels)
 			wav_file.setsampwidth(self.sample_width)
@@ -304,6 +298,13 @@ def load_song(filename, stereo_sound=False):
 
 	try:
 		if not stereo_sound:
+
+
+
+			#Mention to Dr. B that flatten= needed to be added
+
+
+
 			return Song(filename, flatten=True)
 		else:
 			left  = Song(filename)
