@@ -1,5 +1,6 @@
 import random
 from audio_csp import audio_csp as acsp
+import numpy as np
 
 #Problem 1
 def reverse_list(lis):
@@ -100,8 +101,10 @@ def min_max(lis):
 	max0 = lis[0]
 
 	for i in lis:
-		max0 = i if i > max0 else max0
-		min0 = i if i < min0 else min0
+		if i > max0:
+			max0 = i 
+		if i < min0:
+			min0 = i
 
 	return (min0, max0)
 
@@ -175,18 +178,18 @@ def set_union(lis1, lis2):
 #Problem 17
 def set_intersection(lis1, lis2):
 	same = []
-
 	for i in range(len(lis1)):
 		for j in range(len(lis2)):
-			if lis1[i] == lis2[j]:
+			if lis1[i] == lis2[j] and lis1[i] not in same:
 				same += [lis1[i]]
-
 	return same
 
 #Problem 18
 def is_subset(lis1, subset):
 	isct = set_intersection(lis1, subset)
-	return True if isct == subset else False
+	if isct == subset:
+		return True
+	return False
 
 #Problem 19
 def set_difference(A, B):
@@ -284,7 +287,8 @@ def largest_hotel_value(L, amount):
 			if testVal > amount:
 				break
 
-			maxVal = testVal if testVal > maxVal else maxVal
+			if testVal > maxVal:
+				maxVal = testVal
 
 	return maxVal
 
@@ -310,9 +314,6 @@ def my_soda(N):
 	return success / simulations
 #End Problem 26
 
-def in_corr_spot(idx, lis1, lis2):
-	return lis1[idx] == lis2[idx]
-
 def to_str_w_space(lis):
 	res = ""
 	for i in range(len(lis)):
@@ -324,7 +325,53 @@ def to_str_w_space(lis):
 	return res
 
 #Project 1
-#def play_mastermind():
+def play_mastermind():
+	code = ""
+	for i in range(4):
+		code += str(random.randint(0,9))
+	code_as_list = []
+	for i in range(len(code)):
+		code_as_list += [code[i]]
+
+	response = []
+	for i in range(len(code)):
+		response += ["_"]
+	print(code)
+	print("Code: " + to_str_w_space(response))
+
+	guesses = 10
+	while guesses > 0:
+		answer = input("Guess: ")
+		answer_as_list = []
+		for i in range(len(answer)):
+			answer_as_list += [answer[i]]
+
+		if code_as_list == answer_as_list:
+			print("Code: Right!")
+			break
+
+		guesses -= 1
+		if len(answer) != len(code):
+			guesses += 1
+			continue
+
+		comp_list = code_as_list[:]
+		for i in range(len(code_as_list)):
+			if code_as_list[i] == answer_as_list[i]:
+				response[i] = code_as_list[i]
+				comp_list[i] = "/"
+
+		for i in range(len(code_as_list)):
+			if comp_list[i] in answer_as_list and response[i] == "_":
+				idx = lin_search(comp_list, answer_as_list[i])
+				response[i] = "*"
+				comp_list[i] = "/"
+
+		if guesses == 0:
+			print("Code: " + code)
+			break
+
+		print("Code: " + to_str_w_space(response))
 	
 #Project 2
 def play_wordle():
@@ -337,7 +384,8 @@ def play_wordle():
 	response = []
 	for i in range(len(word_choice)):
 		response += ["_"]
-	print(f"Word: " + to_str_w_space(response))
+
+	print("Word: " + to_str_w_space(response))
 
 	guesses = 5
 	while guesses > 0:
@@ -368,15 +416,10 @@ def play_wordle():
 				comp_list[i] = "/"
 
 		if guesses == 0:
-			print(f"Word: " + word_choice)
+			print("Word: " + word_choice)
 			break
 
-		print(f"Word: " + to_str_w_space(response))
-
-"""
-I apologize for the audio quality of the song
-I used yt-dlp but I'm not sure if that's the issue
-"""
+		print("Word: " + to_str_w_space(response))
 
 #AF Problem 1
 def carnival_up_and_down():
@@ -406,20 +449,21 @@ def carnival_mute_10s():
 	acsp.save_song("carnival_mute_10s_p2.wav", carnival)
 
 #AF Problem 3
-def carnival_20s_backwards():
+def carnival_10s_backwards():
 	carnival = acsp.load_song("carnival.wav")
 
 	cut = carnival[:480001]
 	carnival = carnival[480001:]
-	#Ask him; ::-1 was used instead of shown method
-	rev_cut = []
+
+	rev_cut = acsp.load_song("carnival.wav")[:1]
+	rev_cut.song_arr = []
 
 	for i in range(len(cut) - 1, -1, -1):
-		rev_cut = rev_cut + [cut[i]]
+		rev_cut += [cut[i]]
 
 	carnival = rev_cut + carnival
 
-	acsp.save_song("carnival_20s_backwards_p3.wav", carnival)
+	acsp.save_song("carnival_10s_backwards_p3.wav", carnival)
 
 #AF Problem 4
 def ramp_up_volume():
@@ -433,9 +477,8 @@ def ramp_up_volume():
 #AF Problem 5
 def no_chorus():
 	carnival = acsp.load_song("carnival.wav")
-	res = carnival.copy()
-	for i in range(len(res)):
-		res.pop()
+	res = acsp.load_song("carnival.wav")
+	res.song_arr = []
 
 	res += carnival[624000:3072000]
 	res += carnival[3696000:7152000]
@@ -447,16 +490,61 @@ def no_chorus():
 
 #AF Problem 6
 def triad_CEG():
-	C_channels = acsp.load_song("C.wav")
-	CL = C_channels[0]
-	CR = C_channels[1]
-	E_channels = acsp.load_song("E.wav", True)
-	EL = E_channels[0]
-	ER = E_channels[1]
-	G_channels = acsp.load_song("G.wav", True)
-	GL = G_channels[0]
-	GR = G_channels[1]
-triad_CEG()
+	C = acsp.load_song("C.wav")
+	E = acsp.load_song("E.wav")
+	G = acsp.load_song("G.wav")
+
+	combined = C.copy()
+	for i in range(len(C)):
+		combined[i] = C[i] + E[i] + G[i]
+
+	acsp.save_song("triad_CEG_p6.wav", combined)
+
+#AF Problem 7
+def triad_ACE():
+	A = acsp.load_song("A.wav")
+	C = acsp.load_song("C.wav")
+	E = acsp.load_song("E.wav")
+
+	combined = A.copy()
+	for i in range(len(A)):
+		combined[i] = A[i] + C[i] + E[i]
+
+	combined.song_arr = np.clip(combined.song_arr, -32768, 32767)
+	acsp.save_song("triad_ACE_p7.wav", combined)
+
+#AF Problem 8
+def bass_boosted_and_sped_up():
+	carnival = acsp.load_song("carnival.wav", True)
+	carnivalL = carnival[0]
+	carnivalR = carnival[1]
+	acsp.set_song_frequency(carnivalL, 56640)
+	acsp.set_song_frequency(carnivalR, 56640)
+
+	acsp.goto_freq_domain(carnivalL)
+	acsp.goto_freq_domain(carnivalR)
+
+	dataL = acsp.get_frequency_data(carnivalL)
+	dataR = acsp.get_frequency_data(carnivalR)
+
+	freqL, amplL = dataL
+	freqR, amplR = dataR
+
+	for i in range(len(freqL)):
+		if 0 < freqL[i] < 150:
+			carnivalL.song_arr[i] *= 3.5
+	for i in range(len(freqR)):
+		if 0 < freqR[i] < 150:
+			carnivalR.song_arr[i] *= 3.5
+
+	acsp.goto_time_domain(carnivalL)
+	acsp.goto_time_domain(carnivalR)
+
+
+	carnivalL.song_arr = np.clip(carnivalL.song_arr, -32768, 32767)
+	carnivalR.song_arr = np.clip(carnivalR.song_arr, -32768, 32767)
+
+	acsp.save_song("carnival_bass_boosted_and_sped_up_p8.wav", carnivalL, carnivalR)
 
 
 
