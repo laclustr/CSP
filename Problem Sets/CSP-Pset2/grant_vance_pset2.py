@@ -518,7 +518,7 @@ def triad_ACE():
 	for i in range(len(A)):
 		combined[i] = A[i] + C[i] + E[i]
 
-	combined.song_arr = lim_list(combined.song_arr)
+	combined = lim_list(combined)
 
 	acsp.save_song("triad_ACE_p7.wav", combined)
 
@@ -527,8 +527,9 @@ def bass_boosted_and_sped_up():
 	carnival = acsp.load_song("carnival.wav", True)
 	carnivalL = carnival[0]
 	carnivalR = carnival[1]
-	acsp.set_song_frequency(carnivalL, 56640)
-	acsp.set_song_frequency(carnivalR, 56640)
+
+	acsp.set_song_frequency(carnivalL, 56112)
+	acsp.set_song_frequency(carnivalR, 56112)
 
 	acsp.goto_freq_domain(carnivalL)
 	acsp.goto_freq_domain(carnivalR)
@@ -543,15 +544,15 @@ def bass_boosted_and_sped_up():
 
 	for i in range(len(freqL)):
 		if 0 < freqL[i] < 150:
-			carnivalL.song_arr[i] *= 3.5
+			carnivalL[i] *= 3.5
 	for i in range(len(freqR)):
 		if 0 < freqR[i] < 150:
-			carnivalR.song_arr[i] *= 3.5
+			carnivalR[i] *= 3.5
 
 	acsp.goto_time_domain(carnivalL)
 	acsp.goto_time_domain(carnivalR)
 
-	carnivalL.song_arr = lim_list(carnivalL.song_arr)
-	carnivalR.song_arr = lim_list(carnivalR.song_arr)
+	carnivalL = lim_list(carnivalL)
+	carnivalR = lim_list(carnivalR)
 
 	acsp.save_song("carnival_bass_boosted_and_sped_up_p8.wav", carnivalL, carnivalR)
