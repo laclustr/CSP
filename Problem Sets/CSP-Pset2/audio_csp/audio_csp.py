@@ -53,7 +53,7 @@ class Song:
 		self.time_domain  = True
 		self.freqs        = None
 		
-		self.song_arr	     = None
+		self.song_arr	   = None
 		self.song_arr_time = None
 		self.song_arr_fft  = None
 

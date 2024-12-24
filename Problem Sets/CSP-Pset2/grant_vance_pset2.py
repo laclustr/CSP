@@ -455,7 +455,8 @@ def carnival_10s_backwards():
 	carnival = carnival[480001:]
 
 	rev_cut = acsp.load_song("carnival.wav")[:1]
-	rev_cut.song_arr = []
+	for i in range(len(rev_cut)):
+		rev_cut.pop()
 
 	for i in range(len(cut) - 1, -1, -1):
 		rev_cut += [cut[i]]
@@ -477,7 +478,8 @@ def ramp_up_volume():
 def no_chorus():
 	carnival = acsp.load_song("carnival.wav")
 	res = acsp.load_song("carnival.wav")
-	res.song_arr = []
+	for i in range(len(res)):
+		res.pop()
 
 	res += carnival[624000:3072000]
 	res += carnival[3696000:7152000]
