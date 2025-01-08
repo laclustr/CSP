@@ -6,33 +6,33 @@ import subprocess
 ### START OF DEPENDENCY JUNK ###
 
 if not os.path.exists("assets"):
-	os.mkdir("assets")
-	
+  os.mkdir("assets")
+  
 sys.path.append("assets")
 
 def is_package_installed(package_name, target_folder):
-	""" Check if package_name is installed to a specific target_folder """
-	
-	package_folder = os.path.join(target_folder, package_name)
+  """ Check if package_name is installed to a specific target_folder """
+  
+  package_folder = os.path.join(target_folder, package_name)
 
-	return os.path.exists(package_folder)
+  return os.path.exists(package_folder)
 
 def install_package_to_folder(package_name, target_folder):
-	""" Installs package_name to target_folder using pip/pip3 """
-	if not is_package_installed(package_name, target_folder):
-		print(f"Installing: {package_name} to {target_folder} folder...")
-		try:
-			with open(os.devnull, "w") as devnull:
-				try:
-					if os.name == "nt":
-						subprocess.check_call(['pip', 'install', '--target', target_folder, package_name], stdout=devnull, stderr=devnull)
-					else:
-						subprocess.check_call(['pip3', 'install', '--target', target_folder, package_name], stdout=devnull, stderr=devnull)
-				except subprocess.CalledProcessError:
-					raise Exception(f"pip must be installed, and you must have an internet connection. Verify with pip --version or pip3 --version on mac/Linux")
+  """ Installs package_name to target_folder using pip/pip3 """
+  if not is_package_installed(package_name, target_folder):
+    print(f"Installing: {package_name} to {target_folder} folder...")
+    try:
+        with open(os.devnull, "w") as devnull:
+          try:
+            if os.name == "nt":
+              subprocess.check_call(['pip', 'install', '--target', target_folder, package_name], stdout=devnull, stderr=devnull)
+            else:
+              subprocess.check_call(['pip3', 'install', '--target', target_folder, package_name], stdout=devnull, stderr=devnull)
+          except subprocess.CalledProcessError:
+            raise Exception(f"pip must be installed, and you must have an internet connection. Verify with pip --version or pip3 --version on mac/Linux")
 
-		except subprocess.CalledProcessError:
-			raise Exception(f"Error installing {package_name}")
+    except subprocess.CalledProcessError:
+      raise Exception(f"Error installing {package_name}")
 
 
 install_package_to_folder("numpy", "assets")
@@ -53,7 +53,7 @@ class Song:
 		self.time_domain  = True
 		self.freqs        = None
 		
-		self.song_arr	   = None
+		self.song_arr	     = None
 		self.song_arr_time = None
 		self.song_arr_fft  = None
 
@@ -80,8 +80,8 @@ class Song:
 					sys.exit(f"Invalid bit depth in {filename}. Something went wrong with it.")
 
 			# Check if actually 2 channel if trying to load 2 channel
-			if self.num_channels != 2 and not flatten:
-				sys.exit(f"Audio file {filename} has this many channels: {self.num_channels}. Cannot grab 2 channels.")
+			if self.num_channels not in (1, 2) and not flatten:
+				sys.exit(f"Audio file {filename} has this many channels: {self.num_channel}. Cannot grab 2 channels.")
 
 			# Read the audio data as a byte object
 			audio_data = wav_file.readframes(self.num_frames)
@@ -89,27 +89,16 @@ class Song:
 			# Convert the byte object to an int np array of correct size
 			int_data = np.frombuffer(audio_data, dtype=self.arr_dtype)
 
-
-
-
-			"""
-			Mention to Dr.B!!!!!!!!
-			"""
-
-
-
-
 			# If the audio has multiple channels, take the average to flatten to mono
 			if self.num_channels == 2 and flatten:
-				left_channel = int_data[0::2]
-				right_channel = int_data[1::2]
-				int_data = ((left_channel.astype(np.int32) + right_channel.astype(np.int32)) // 2).astype(self.arr_dtype)
+				int_data = (int_data[0::2] + int_data[1::2]) // 2
 			
 			self.song_arr = int_data.tolist()
 
+
 	def copy(self):
 		"""Copies the song but appears to just copy the list representing the song."""
-		song_copy = Song(self.filename, flatten = True)
+		song_copy = Song(self.filename)
 		song_copy.song_arr = self.song_arr.copy()
 		return song_copy
 
@@ -177,6 +166,7 @@ class Song:
 				sys.exit(f"Ch1 Len: {len(self.song_arr)}, Ch2 Len: {len(other.song_arr)}. Ch1 and Ch2 must have the same lengths to be compatible.")
 			if self.arr_dtype != other.arr_dtype:
 				sys.exit(f"Ch1 data type: {self.arr_dtype}, Ch2 data type: {other.arr_dtype}. Ch1 and Ch2 are not compatible data types. Check the bit depth of your files.")
+
 
 		print(f"Writing {file_path}...")
 		with wave.open(file_path, "wb") as wav_file:
@@ -298,13 +288,6 @@ def load_song(filename, stereo_sound=False):
 
 	try:
 		if not stereo_sound:
-
-
-
-			#Mention to Dr. B that flatten= needed to be added
-
-
-
 			return Song(filename, flatten=True)
 		else:
 			left  = Song(filename)

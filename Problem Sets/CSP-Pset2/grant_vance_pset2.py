@@ -422,6 +422,8 @@ def play_wordle():
 
 #AF Problem 1
 def carnival_up_and_down():
+	#This may take a little to run, but it works
+
 	carnival = acsp.load_song("carnival.wav")
 
 	for i in range(1, 281):
@@ -526,6 +528,8 @@ def triad_ACE():
 
 #AF Problem 8
 def bass_boosted_and_sped_up():
+	#This may also take a little to run, but it works
+
 	carnival = acsp.load_song("carnival.wav", True)
 	carnivalL = carnival[0]
 	carnivalR = carnival[1]
