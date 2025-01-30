@@ -42,8 +42,6 @@ def get_score_statistics(dataP, solutionP):
 #Problem 6
 #Problem 7
 
-gscale_img = img.load_grayscale("images_csp/cat.jpg")
-
 #Problem 8
 def threshold(image, threshold):
 	new_img = []
@@ -79,8 +77,132 @@ def adj_brightness(image, adjustment):
 
 #Problem 10
 def flip_vertical(image):
+	new_img = []
+	for row in range(len(image) - 1, -1, -1):
+		new_img += [image[row]]
+	return new_img
 
-img.show_image(adj_brightness(gscale_img, 100))
+#Problem 11
+def flip_horizontal(image):
+	new_img = []
+	for row in range(len(image)):
+		new_row = []
+		for px in range(len(image[row]) - 1, -1, -1):
+			new_row += [image[row][px]]
+		new_img.append(new_row)
+	return new_img
+
+#Problem 12
+def invert_img(image):
+	new_img = []
+	for row in range(len(image)):
+		new_row = []
+		for px in range(len(image[row])):
+			new_val = abs(image[row][px] - 255)
+			new_row += [new_val]
+		new_img.append(new_row)
+	return new_img
+
+#Problem 13
+def crop_img(image, TLtuple, BRtuple):
+	new_img = []
+	for row in range(TLtuple[0], BRtuple[0]):
+		new_row = []
+		for px in range(TLtuple[1], BRtuple[1]):
+			new_row += [image[row][px]]
+		new_img.append(new_row)
+	return new_img
+
+#Problem 14
+def rotate90ccw(image):
+	new_img = []
+	for col in range(len(image[0])):
+		new_row = []
+		for row in range(len(image)):
+			new_row += [image[row][col]]
+		new_img.append(new_row)
+	return new_img
+
+#Problem 15
+def rotate90cw(image):
+	new_img = []
+	for col in range(len(image[0])):
+		new_row = []
+		for row in range(len(image) - 1, -1, -1):
+			new_row += [image[row][col]]
+		new_img.append(new_row)
+	return new_img
+#End Problem 15
+
+def gen_mask():
+	maske_img = []
+	for row in range(len(gscale_img)):
+		new_row = []
+		for px in range(len(gscale_img[row])):
+			if gscale_img[row][px] > 150.5:
+				new_row += [0]
+			else:
+				new_row += [1]
+		maske_img.append(new_row)
+	return maske_img
+
+#Problem 16
+def mask_img(image, mask):
+	new_img = []
+	for row in range(len(image)):
+		new_row = []
+		for px in range(len(image[row])):
+			if mask[row][px]:
+				new_row += [image[row][px]]
+			else:
+				new_row += [0]
+		new_img.append(new_row)
+	return new_img
+
+#Problem 17
+def cvt_grayscale(image):
+	new_img = []
+	for row in range(len(image)):
+		new_row = []
+		for px in range(len(image[row])):
+			total = 0
+			for px_val in image[row][px]:
+				total += px_val
+			new_row += [total // len(image[row][px])]
+		new_img += [new_row]
+	return new_img
+#End Problem 17
+
+def limit_255_rgb(image):
+	lim_img = []
+	for row in image:
+		new_row = []
+		for px_rgb in row:
+			new_px = []
+			for px in px_rgb:
+				new_px += [255] if px >= 255 else [px]
+			new_row.append(new_px)
+		lim_img.append(new_row)
+	return lim_img
+
+#Problem 18
+def filter_sunset(image, adjustment):
+	new_img = []
+	for row in range(len(image)):
+		new_row = []
+		for px_rgb in range(len(image[row])):
+			new_px = []
+			for i in range(len(image[row][px_rgb])):
+				if not i:
+					new_px += [image[row][px_rgb][i] + adjustment]
+				else:
+					new_px += [image[row][px_rgb][i]]
+			new_row += [new_px]
+		new_img += [new_row]
+	return limit_255_rgb(new_img)
+
+rgb_img = img.load_rgb("images_csp/cat.jpg")
+img.show_image(filter_sunset(rgb_img, 100))
 
 
 
