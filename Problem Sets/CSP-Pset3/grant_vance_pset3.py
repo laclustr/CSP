@@ -180,6 +180,7 @@ def limit_255_rgb(image):
 		for px_rgb in row:
 			new_px = []
 			for px in px_rgb:
+				px = px // 1
 				new_px += [255] if px >= 255 else [px]
 			new_row.append(new_px)
 		lim_img.append(new_row)
@@ -201,9 +202,87 @@ def filter_sunset(image, adjustment):
 		new_img += [new_row]
 	return limit_255_rgb(new_img)
 
-rgb_img = img.load_rgb("images_csp/cat.jpg")
-img.show_image(filter_sunset(rgb_img, 100))
+#Problem 19
+def filter_sepia(image):
+	redMul = .349
+	grnMul = .686
+	bluMul = .168
+	redMul = .272
+	grnMul = .534
+	bluMul = .131
 
+	new_img = []
+	for row in range(len(image)):
+		new_row = []
+		for px_rgb in range(len(image[row])):
+			new_px_rgb = []
+
+			r_val = image[row][px_rgb][0]
+			g_val = image[row][px_rgb][1]
+			b_val = image[row][px_rgb][2]
+
+			new_px_rgb += [.393 * r_val + .769 * g_val + .189 * b_val]
+			new_px_rgb += [.349 * r_val + .686 * g_val + .168 * b_val]
+			new_px_rgb += [.272 * r_val + .534 * g_val + .131 * b_val]
+
+			new_row += [new_px_rgb]
+		new_img += [new_row]
+	return limit_255_rgb(new_img)
+#End Problem 19
+
+def combine_2pics(image1, image2):
+	new_img = []
+	for row in range(len(image1)):
+		new_img += [image1[row] + image2[row]]
+	return new_img
+
+def make_1_color(image, color):
+	new_img = []
+	for row in range(len(image)):
+		new_row = []
+		for px_rgb in range(len(image[row])):
+			if color == "red":
+				new_px_rgb = [image[row][px_rgb][0], 0, 0]
+			elif color == "green":
+				new_px_rgb = [0, image[row][px_rgb][1], 0]
+			elif color == "blue":
+				new_px_rgb = [0, 0, image[row][px_rgb][2]]
+			new_row.append(new_px_rgb)
+		new_img.append(new_row)
+	return new_img
+
+#Problem 20
+def warhol_effect(image):
+	TL = []
+	TR = make_1_color(image, "red")
+	BL = make_1_color(image, "blue")
+	BR = make_1_color(image, "green")
+
+	for row in range(len(image)):
+		new_row = []
+		for px_rgb in range(len(image[row])):
+			new_px_rgb = [0, image[row][px_rgb][1], image[row][px_rgb][2]]
+			new_row.append(new_px_rgb)
+		TL.append(new_row)
+
+	top = combine_2pics(TL, TR)
+	btm = combine_2pics(BL, BR)
+	top.extend(btm)
+
+	return top
+
+#Problem 21
+def filter_boxblur(image):
+	print("")
+
+#Problem 22
+def find_edges(image):
+	print("")
+
+"""
+rgb_img = img.load_rgb("images_csp/cat.jpg")
+img.show_image(warhol_effect(rgb_img))
+"""
 
 
 
