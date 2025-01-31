@@ -37,10 +37,15 @@ def get_score_statistics(dataP, solutionP):
 		avg_total += score
 	return (high, low, avg_total / len(CQuestions))
 
+"""
+In games.py
+
 #Problem 4
 #Problem 5
 #Problem 6
 #Problem 7
+
+"""
 
 #Problem 8
 def threshold(image, threshold):
@@ -134,6 +139,7 @@ def rotate90cw(image):
 	return new_img
 #End Problem 15
 
+#Used for testing, delete before submit
 def gen_mask():
 	maske_img = []
 	for row in range(len(gscale_img)):
