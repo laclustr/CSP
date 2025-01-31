@@ -27,6 +27,7 @@ def move_c4_piece(column, board, p_turn):
 	return "continue"
 
 def check_c4_win(board, row_n, column_n):
+	#HZ
 	for row in board:
 		for piece in range(len(row) - 3):
 			if (row[piece] != " " and
@@ -36,6 +37,7 @@ def check_c4_win(board, row_n, column_n):
 				row[piece + 3]):
 				return True
 
+	#VTCL
 	for col in range(len(board[0])):
 		for row in range(len(board) - 3):
 			if (board[row][col] != " " and 
@@ -45,15 +47,17 @@ def check_c4_win(board, row_n, column_n):
 				board[row + 3][col]):
 				return True
 
+	#DGL, TL-BR
 	for row in range(len(board) - 3):
 		for col in range(len(board[0]) - 3):
-			if (board[col][row] != " " and
-				board[col + 0][row + 0] ==
-				board[col + 1][row + 1] ==
-				board[col + 2][row + 2] ==
-				board[col + 3][row + 3]):
+			if (board[row][col] != " " and
+				board[row + 0][col + 0] ==
+				board[row + 1][col + 1] ==
+				board[row + 2][col + 2] ==
+				board[row + 3][col + 3]):
 				return True
 
+	#DGL, BL-TR
 	for row in range(3, len(board)):
 		for col in range(len(board[0]) - 3):
 			if (board[row][col] != " " and
@@ -103,6 +107,7 @@ def connect_four():
 
 		p_turn = 1 if not p_turn else 0
 #End Problem 4
+connect_four()
 
 def get_adjacent_bombs(board):
 	new_board = []
