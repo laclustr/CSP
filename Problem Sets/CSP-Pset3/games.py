@@ -88,7 +88,7 @@ def connect_four():
 		if n_board == "continue":
 			continue
 		else:
-			board == n_board
+			board = n_board
 		print_c4_board(board)
 
 		if check_c4_win(board, rows, columns):
