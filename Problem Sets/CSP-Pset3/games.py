@@ -86,6 +86,7 @@ def connect_four():
 
 		n_board = move_c4_piece(p_move, board, player)
 		if n_board == "continue":
+			print("Full Row!")
 			continue
 		else:
 			board = n_board
