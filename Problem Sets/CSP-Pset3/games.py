@@ -22,7 +22,7 @@ def move_c4_piece(column, board, p_turn):
 			if row == len(board) - 1 or board[row + 1][column] != " ":
 				board[row][column] = p_turn
 				return board
-	return board
+	return "continue"
 
 def check_c4_win(board, row_n, column_n):
 	for row in board:
@@ -60,6 +60,7 @@ def check_c4_win(board, row_n, column_n):
 				board[row - 2][col + 2] ==
 				board[row - 3][col + 3]):
 				return True
+	return False
 
 def full_c4_board(board):
 	for row in board:
@@ -80,8 +81,14 @@ def connect_four():
 	while True:
 		player = "R" if not p_turn else "Y"
 		p_move = int(input(f"Player {player}, enter a column (1 - {columns}): ")) - 1
+		if p_move not in range(0, columns):
+			continue
 
-		board = move_c4_piece(p_move, board, player)
+		n_board = move_c4_piece(p_move, board, player)
+		if n_board == "continue":
+			continue
+		else:
+			board == n_board
 		print_c4_board(board)
 
 		if check_c4_win(board, rows, columns):
@@ -103,4 +110,4 @@ def sudoku(puzzle):
 
 #Problem 7
 def hitori(puzzle):
-	print("Je sais pas que passe")
+	print("Je sais pas ce qui passe")
