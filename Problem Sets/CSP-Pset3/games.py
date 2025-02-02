@@ -107,7 +107,6 @@ def connect_four():
 
 		p_turn = 1 if not p_turn else 0
 #End Problem 4
-connect_four()
 
 def get_adjacent_bombs(board):
 	new_board = []
@@ -228,10 +227,81 @@ def minesweeper(height, width, difficulty_pct):
 			break
 #End Problem 5
 
+def print_sudoku_board(board):
+	for row in range(len(board)):
+		if row % 3 == 0:
+			print("-" * (len(board[0]) * 3 - 2))
+		for col in range(len(board[row])):
+			if col % 3 == 0:
+				print("|", end=" ")
+			print(board[row][col], end=" ")
+		print("|")
+	print("-" * (len(board[0]) * 3 - 2))
+
+def sudoku_valid_move(user_change, puzzle):
+	if len(user_change) != 4:
+		return False
+	if int(user_change[0]) not in range(1, len(puzzle) + 1):
+		return False
+	if int(user_change[1]) not in range(1, len(puzzle[0]) + 1):
+		return False
+	if int(user_change[3]) not in range(1, 10):
+		return False
+	return True
+
+def sudoku_solved(puzzle):
+	sorted_list = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+	for row in puzzle:
+		if sorted(row) != sorted_list:
+			return False
+	for col in range(len(puzzle[0])):
+		curr_col = []
+		for row in range(len(puzzle)):
+			curr_col += [puzzle[row][col]]
+		if sorted(curr_col) != sorted_list:
+			return False
+	for row in range(0, len(puzzle), 3):
+		for col in range(0, len(puzzle[0]), 3):
+			curr_3x3 = []
+			for i in range(3):
+				for j in range(3):
+					curr_3x3 += [puzzle[row + i][col + j]]
+			if sorted(curr_3x3) != sorted_list:
+				return False
+	return True
+
 #Problem 6
 def sudoku(puzzle):
-	print("This game's boring \"ash\" ")
+	og_puzzle = []
+	for row in puzzle:
+		og_puzzle.append(row.copy())
+	print_sudoku_board(puzzle)
+
+	while True:
+		user_change = input(f"Enter a change, (row 1 - {len(puzzle)})(column 1 - {len(puzzle[0])}) (number 1 - 9): ").strip()
+		if not sudoku_valid_move(user_change, puzzle):
+			continue
+		user_change = (int(user_change[0]) - 1, int(user_change[1]) - 1, int(user_change[3]))
+		if og_puzzle[user_change[0]][user_change[1]] != 0:
+			continue
+		puzzle[user_change[0]][user_change[1]] = user_change[2]
+		print_sudoku_board(puzzle)
+
+		if sudoku_solved(puzzle):
+			print("You Win!")
+			break
+#End Problem 6
 
 #Problem 7
 def hitori(puzzle):
-	print("Je sais pas ce qui passe")
+	
+
+
+
+
+
+
+
+
+
+
