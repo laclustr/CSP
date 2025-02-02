@@ -278,7 +278,7 @@ def sudoku(puzzle):
 	print_sudoku_board(puzzle)
 
 	while True:
-		user_change = input(f"Enter a change, (row 1 - {len(puzzle)})(column 1 - {len(puzzle[0])}) (number 1 - 9): ").strip()
+		user_change = input(f"Enter a move, (row 1 - {len(puzzle)})(column 1 - {len(puzzle[0])}) (number 1 - 9): ").strip()
 		if not sudoku_valid_move(user_change, puzzle):
 			continue
 		user_change = (int(user_change[0]) - 1, int(user_change[1]) - 1, int(user_change[3]))
@@ -292,10 +292,89 @@ def sudoku(puzzle):
 			break
 #End Problem 6
 
+def print_hitori_board(board):
+	for row in board:
+		for piece in row:
+			if piece == 0:
+				print("#", end=" ")
+			else:
+				print(piece, end=" ")
+		print("")
+
+def hitori_valid_move(move, puzzle):
+	if len(move) != 2:
+		return False
+	if not 0 < int(move[0]) < len(puzzle):
+		return False
+	if not 0 < int(move[1]) < len(puzzle[0]):
+		return False
+	return True
+
+def hitori_connected(puzzle):
+	return True
+
+def hitori_solved(puzzle):
+	for row in puzzle:
+		#Checks 0s on touching horizontally
+		for piece in range(len(row) - 1):
+			if row[piece] == 0 and row[piece] == row[piece + 1]:
+				return False
+		#Checks no duplicates by row
+		for i in range(len(row)):
+			for j in range(len(row)):
+				if i != j and row[i] == row[j] and row[i] != 0:
+					return False
+
+	for col in range(len(puzzle[0])):
+		curr_col = []
+		for row in range(len(puzzle)):
+			curr_col += [puzzle[row][col]]
+
+		#Checks 0s on touching vertically
+		for piece in range(len(curr_col) - 1):
+			if curr_col[piece] == 0 and curr_col[piece] == curr_col[piece + 1]:
+				return False
+		#Checks no duplicates by column
+		for i in range(len(curr_col)):
+			for j in range(len(curr_col)):
+				if i != j and curr_col[i] == curr_col[j] and curr_col != 0:
+					return False
+	return True
+
 #Problem 7
 def hitori(puzzle):
-	
+	og_puzzle = []
+	for row in puzzle:
+		og_puzzle.append(row.copy())
+	print_hitori_board(puzzle)
 
+	while True:
+		move = input(f"Enter a move, (row 1 - {len(puzzle)})(col 1 - {len(puzzle[0])}): ").strip()
+		if not hitori_valid_move(move, puzzle):
+			continue
+		move = (int(move[0]) - 1, int(move[1]) - 1)
+
+		if puzzle[move[0]][move[1]] == 0:
+			puzzle[move[0]][move[1]] = og_puzzle[move[0]][move[1]]
+		else:
+			puzzle[move[0]][move[1]] = 0
+
+		print_hitori_board(puzzle)
+
+		if hitori_solved(puzzle):
+			print("You Win!")
+			break
+puzzle = [
+[4, 8, 0, 6, 3, 2, 0, 7],
+[3, 6, 7, 2, 1, 0, 5, 4],
+[0, 3, 4, 0, 2, 8, 6, 1],
+[4, 1, 0, 5, 7, 0, 3, 0],
+[7, 0, 3, 0, 8, 5, 1, 2],
+[0, 5, 6, 7, 0, 1, 8, 0],
+[6, 0, 2, 3, 5, 4, 7, 8],
+[8, 7, 1, 4, 0, 3, 0, 6]
+]
+hitori(puzzle)
 
 
 
