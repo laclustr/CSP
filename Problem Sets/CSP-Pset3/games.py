@@ -310,7 +310,52 @@ def hitori_valid_move(move, puzzle):
 		return False
 	return True
 
+#ChatGPT Function, ask Dr. B about dfs crawling
 def hitori_connected(puzzle):
+	start_row = -1
+	start_col = -1
+	for i in range(len(puzzle)):
+		for j in range(len(puzzle[0])):
+			if puzzle[i][j] != 0:
+				start_row = i
+				start_col = j
+				break
+		if start_row != -1:
+			break
+
+	if start_row == -1:
+		return False
+
+	visited = []
+	for i in range(len(puzzle)):
+		visited.append([False] * len(puzzle[0]))
+
+	visited[start_row][start_col] = True
+	cells_to_check = [(start_row, start_col)]
+
+	while cells_to_check:
+		row, col = cells_to_check.pop()
+
+		if row > 0 and puzzle[row-1][col] != 0 and not visited[row-1][col]:
+			visited[row-1][col] = True
+			cells_to_check.append((row-1, col))
+
+		if row < len(puzzle)-1 and puzzle[row+1][col] != 0 and not visited[row+1][col]:
+			visited[row+1][col] = True
+			cells_to_check.append((row+1, col))
+
+		if col > 0 and puzzle[row][col-1] != 0 and not visited[row][col-1]:
+			visited[row][col-1] = True
+			cells_to_check.append((row, col-1))
+
+		if col < len(puzzle[0])-1 and puzzle[row][col+1] != 0 and not visited[row][col+1]:
+			visited[row][col+1] = True
+			cells_to_check.append((row, col+1))
+
+	for i in range(len(puzzle)):
+		for j in range(len(puzzle[0])):
+			if puzzle[i][j] != 0 and not visited[i][j]:
+				return False
 	return True
 
 def hitori_solved(puzzle):
@@ -364,12 +409,3 @@ def hitori(puzzle):
 		if hitori_solved(puzzle):
 			print("You Win!")
 			break
-
-
-
-
-
-
-
-
-

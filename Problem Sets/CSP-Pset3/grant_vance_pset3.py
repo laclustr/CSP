@@ -1,5 +1,6 @@
 from grade_helper import grade_helper as gh
 from images_csp import images_csp as img
+from games import connect_four, minesweeper, sudoku, hitori
 
 #Problem 1
 def get_grades(dataP, solutionP):
@@ -38,13 +39,11 @@ def get_score_statistics(dataP, solutionP):
 	return (high, low, avg_total / len(CQuestions))
 
 """
-In games.py
-
+In games.py, imported to this file if needed
 #Problem 4
 #Problem 5
 #Problem 6
 #Problem 7
-
 """
 
 #Problem 8
@@ -285,10 +284,9 @@ def filter_boxblur(image):
 def find_edges(image):
 	print("")
 
-"""
-rgb_img = img.load_rgb("images_csp/cat.jpg")
-img.show_image(warhol_effect(rgb_img))
-"""
+#rgb_img = img.load_rgb("images_csp/cat.jpg")
+#img.show_image(warhol_effect(rgb_img))
+
 
 
 
