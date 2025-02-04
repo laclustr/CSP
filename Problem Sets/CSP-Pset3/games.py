@@ -115,38 +115,22 @@ def get_adjacent_bombs(board):
 		for col in range(len(board[0])):
 			counter = 0
 			if board[row][col] == " ":
-				if row > 0:
-					#TC
-					if board[row - 1][col] == "B":
-						counter += 1
-					if col > 0:
-						#TL
-						if board[row - 1][col - 1] == "B":
-							counter += 1
-					if col < len(board[0]) - 1:
-						#TR
-						if board[row - 1][col + 1] == "B":
-							counter += 1
-				if col > 0:
-					#CL
-					if board[row][col - 1] == "B":
-						counter += 1
-				if col < len(board[0]) - 1:
-					#CR
-					if board[row][col + 1] == "B":
-						counter += 1
-				if row < len(board) - 1:
-					#BC
-					if board[row + 1][col] == "B":
-						counter += 1
-					if col > 0:
-						#BL
-						if board[row + 1][col - 1] == "B":
-							counter += 1
-					if col < len(board[0]) - 1:
-						#BR
-						if board[row + 1][col + 1] == "B":
-							counter += 1
+				if row > 0 and board[row - 1][col] == "B":
+					counter += 1
+				if row > 0 and col > 0 and board[row - 1][col - 1] == "B":
+					counter += 1
+				if row > 0 and col < len(board[0]) - 1 and board[row - 1][col + 1] == "B":
+					counter += 1
+				if col > 0 and board[row][col - 1] == "B":
+					counter += 1
+				if col < len(board[0]) - 1 and board[row][col + 1] == "B":
+					counter += 1
+				if row < len(board) - 1 and board[row + 1][col] == "B":
+					counter += 1
+				if row < len(board) - 1 and col > 0 and board[row + 1][col - 1] == "B":
+					counter += 1
+				if row < len(board) - 1 and col < len(board[0]) - 1 and board[row + 1][col + 1] == "B":
+					counter += 1
 				new_row += [counter]
 			else:
 				new_row += ["B"]
@@ -310,51 +294,49 @@ def hitori_valid_move(move, puzzle):
 		return False
 	return True
 
-#ChatGPT Function, ask Dr. B about dfs crawling
+def make_hitori_tf(puzzle):
+	new_puzzle = []
+	for row in puzzle:
+		new_row = []
+		for val in row:
+			new_row += [True] if val != 0 else [False]
+		new_puzzle += [new_row]
+	return new_puzzle
+
 def hitori_connected(puzzle):
-	start_row = -1
-	start_col = -1
-	for i in range(len(puzzle)):
-		for j in range(len(puzzle[0])):
-			if puzzle[i][j] != 0:
-				start_row = i
-				start_col = j
+	puzzle = make_hitori_tf(puzzle)
+	first = 0
+	for row in range(len(puzzle)):
+		for col in range(len(puzzle[0])):
+			if puzzle[row][col]:
+				first = (row, col)
 				break
-		if start_row != -1:
+		if first != 0:
 			break
 
-	if start_row == -1:
-		return False
+	to_be_checked = [first]
 
-	visited = []
-	for i in range(len(puzzle)):
-		visited.append([False] * len(puzzle[0]))
+	while len(to_be_checked) > 0:
+		pair = to_be_checked.pop()
+		row = pair[0]
+		col = pair[1]
 
-	visited[start_row][start_col] = True
-	cells_to_check = [(start_row, start_col)]
+		if not puzzle[row][col]:
+			continue
+		puzzle[row][col] = False
 
-	while cells_to_check:
-		row, col = cells_to_check.pop()
+		if row > 0 and puzzle[row - 1][col]:
+			to_be_checked += [(row - 1, col)]
+		if row < len(puzzle) - 1 and puzzle[row + 1][col]:
+			to_be_checked += [(row + 1, col)]
+		if col > 0 and puzzle[row][col - 1]:
+			to_be_checked += [(row, col - 1)]
+		if col < len(puzzle[0]) - 1 and puzzle[row][col + 1]:
+			to_be_checked += [(row, col + 1)]
 
-		if row > 0 and puzzle[row-1][col] != 0 and not visited[row-1][col]:
-			visited[row-1][col] = True
-			cells_to_check.append((row-1, col))
-
-		if row < len(puzzle)-1 and puzzle[row+1][col] != 0 and not visited[row+1][col]:
-			visited[row+1][col] = True
-			cells_to_check.append((row+1, col))
-
-		if col > 0 and puzzle[row][col-1] != 0 and not visited[row][col-1]:
-			visited[row][col-1] = True
-			cells_to_check.append((row, col-1))
-
-		if col < len(puzzle[0])-1 and puzzle[row][col+1] != 0 and not visited[row][col+1]:
-			visited[row][col+1] = True
-			cells_to_check.append((row, col+1))
-
-	for i in range(len(puzzle)):
-		for j in range(len(puzzle[0])):
-			if puzzle[i][j] != 0 and not visited[i][j]:
+	for row in puzzle:
+		for piece in row:
+			if piece:
 				return False
 	return True
 
@@ -382,9 +364,9 @@ def hitori_solved(puzzle):
 		#Checks no duplicates by column
 		for i in range(len(curr_col)):
 			for j in range(len(curr_col)):
-				if i != j and curr_col[i] == curr_col[j] and curr_col == 0:
+				if i != j and curr_col[i] == curr_col[j] and curr_col[i] != 0:
 					return False
-	return hitori_connected(puzzle)
+	return hitori_connected(puzzle) and True
 
 #Problem 7
 def hitori(puzzle):
@@ -409,3 +391,4 @@ def hitori(puzzle):
 		if hitori_solved(puzzle):
 			print("You Win!")
 			break
+

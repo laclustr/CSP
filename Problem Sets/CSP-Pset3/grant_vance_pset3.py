@@ -209,13 +209,6 @@ def filter_sunset(image, adjustment):
 
 #Problem 19
 def filter_sepia(image):
-	redMul = .349
-	grnMul = .686
-	bluMul = .168
-	redMul = .272
-	grnMul = .534
-	bluMul = .131
-
 	new_img = []
 	for row in range(len(image)):
 		new_row = []
@@ -275,19 +268,59 @@ def warhol_effect(image):
 	top.extend(btm)
 
 	return top
+#End Problem 20
+
+def avg_adjacent_px(img, col, row, rgb_idx):
+	total = 0
+	num_vals = 0
+	if row > 0:
+		total += img[row - 1][col][rgb_idx]
+		num_vals += 1
+		if col > 0:
+			total += img[row - 1][col - 1][rgb_idx]
+			num_vals += 1
+		if col < len(img[0]) - 1:
+			total += img[row - 1][col + 1][rgb_idx]
+			num_vals += 1
+	if col > 0:
+		total += img[row][col - 1][rgb_idx]
+		num_vals += 1
+	if col < len(img[0]) - 1:
+		total += img[row][col + 1][rgb_idx]
+		num_vals += 1
+	if row < len(img) - 1:
+		total += img[row + 1][col][rgb_idx]
+		num_vals += 1
+		if col > 0:
+			total += img[row + 1][col - 1][rgb_idx]
+			num_vals += 1
+		if col < len(img[0]) - 1:
+			total += img[row + 1][col + 1][rgb_idx]
+			num_vals += 1
+	return total // num_vals
 
 #Problem 21
 def filter_boxblur(image):
-	print("")
+	new_img = []
+	for row in range(len(image)):
+		new_row = []
+		for col in range(len(image[0])):
+			new_px = []
+			for px in range(len(image[row][col])):
+				new_px += [avg_adjacent_px(image, col, row, px)]
+			new_row += [new_px]
+		new_img += [new_row]
+	return new_img
+
+rgb_img = img.load_rgb("images_csp/cat.jpg")
+for _ in range(50):
+	rgb_img = filter_boxblur(rgb_img)
+img.show_image(rgb_img)
+
 
 #Problem 22
 def find_edges(image):
 	print("")
-
-#rgb_img = img.load_rgb("images_csp/cat.jpg")
-#img.show_image(warhol_effect(rgb_img))
-
-
 
 
 
