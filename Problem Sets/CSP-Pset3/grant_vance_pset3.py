@@ -52,7 +52,7 @@ def threshold(image, threshold):
 	for row in image:
 		new_row = []
 		for px in row:
-			if px > threshold:
+			if px >= threshold:
 				new_row += [255]
 			else:
 				new_row += [0]
@@ -139,7 +139,7 @@ def rotate90cw(image):
 #End Problem 15
 
 #Used for testing, delete before submit
-def gen_mask():
+def gen_mask(gscale_img):
 	maske_img = []
 	for row in range(len(gscale_img)):
 		new_row = []
@@ -372,15 +372,3 @@ def find_edges(image):
 			new_row += [new_px]
 		new_img += [new_row]
 	return limit_255_rgb(new_img)
-
-rgb_img = img.load_rgb("images_csp/cat.jpg")
-for _ in range(5):
-	rgb_img = filter_boxblur(rgb_img)
-rgb_img = find_edges(rgb_img)
-
-img.save_image(rgb_img, "blurred_sobel.jpg")
-
-
-
-
-
