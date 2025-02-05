@@ -391,4 +391,3 @@ def hitori(puzzle):
 		if hitori_solved(puzzle):
 			print("You Win!")
 			break
-

@@ -186,7 +186,12 @@ def limit_255_rgb(image):
 			new_px = []
 			for px in px_rgb:
 				px = px // 1
-				new_px += [255] if px >= 255 else [px]
+				if px >= 255:
+					new_px += [255]
+				elif px <= 0:
+					new_px += [0]
+				else:
+					new_px += [px]
 			new_row.append(new_px)
 		lim_img.append(new_row)
 	return lim_img
@@ -272,7 +277,9 @@ def warhol_effect(image):
 
 def avg_adjacent_px(img, col, row, rgb_idx):
 	total = 0
-	num_vals = 0
+	num_vals = 1
+	total += img[row][col][rgb_idx]
+
 	if row > 0:
 		total += img[row - 1][col][rgb_idx]
 		num_vals += 1
@@ -311,20 +318,67 @@ def filter_boxblur(image):
 			new_row += [new_px]
 		new_img += [new_row]
 	return new_img
+#End Problem 21
 
-rgb_img = img.load_rgb("images_csp/cat.jpg")
-for _ in range(50):
-	rgb_img = filter_boxblur(rgb_img)
-img.show_image(rgb_img)
+def get_gx_kernel(img, row, col):
+	new_px = []
+	for rgb_idx in range(len(img[row][col])):
+		total = 0
+		if row > 0 and col > 0:
+			total += img[row - 1][col - 1][rgb_idx] * -1
+		if row > 0 and col < len(img[0]) - 1:
+			total += img[row - 1][col + 1][rgb_idx] * 1
+		if col > 0:
+			total += img[row][col - 1][rgb_idx] * -2
+		if col < len(img[0]) - 1:
+			total += img[row][col + 1][rgb_idx] * 2
+		if row < len(img) - 1 and col > 0:
+			total += img[row + 1][col - 1][rgb_idx] * -1
+		if row < len(img) - 1 and col < len(img[0]) - 1:
+			total += img[row + 1][col + 1][rgb_idx] * 1
+		new_px += [total]
+	return new_px
 
+def get_gy_kernel(img, row, col):
+	new_px = []
+	for rgb_idx in range(len(img[row][col])):
+		total = 0
+		if row > 0:
+			total += img[row - 1][col][rgb_idx] * -2 
+		if row > 0 and col > 0:
+			total += img[row - 1][col - 1][rgb_idx] * -1
+		if row > 0 and col < len(img[0]) - 1:
+			total += img[row - 1][col + 1][rgb_idx] * -1
+		if row < len(img) - 1:
+			total += img[row + 1][col][rgb_idx] * 2
+		if row < len(img) - 1 and col > 0:
+			total += img[row + 1][col - 1][rgb_idx] * 1
+		if row < len(img) - 1 and col < len(img[0]) - 1:
+			total += img[row + 1][col + 1][rgb_idx] * 1
+		new_px += [total]
+	return new_px
 
 #Problem 22
 def find_edges(image):
-	print("")
+	new_img = []
+	for row in range(len(image)):
+		new_row = []
+		for col in range(len(image[0])):
+			new_px = []
+			gx = get_gx_kernel(image, row, col)
+			gy = get_gy_kernel(image, row, col)
+			for item in range(len(gx)):
+				new_px += [((gx[item] ** 2) + (gy[item] ** 2)) ** 0.5]
+			new_row += [new_px]
+		new_img += [new_row]
+	return limit_255_rgb(new_img)
 
+rgb_img = img.load_rgb("images_csp/cat.jpg")
+for _ in range(5):
+	rgb_img = filter_boxblur(rgb_img)
+rgb_img = find_edges(rgb_img)
 
-
-
+img.save_image(rgb_img, "blurred_sobel.jpg")
 
 
 
