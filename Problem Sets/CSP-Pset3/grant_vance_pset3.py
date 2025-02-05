@@ -39,7 +39,7 @@ def get_score_statistics(dataP, solutionP):
 	return (high, low, avg_total / len(CQuestions))
 
 """
-In games.py, imported to this file if needed
+In games.py, imported directly to this file if needed
 #Problem 4
 #Problem 5
 #Problem 6
@@ -65,7 +65,10 @@ def limit_255(image):
 	for row in image:
 		new_row = []
 		for px in row:
-			new_row += [255] if px >= 255 else [px]
+			if px >= 255:
+				new_row += [255]
+			else:
+				new_row += [px]
 		lim_img.append(new_row)
 	return lim_img
 
@@ -136,20 +139,6 @@ def rotate90cw(image):
 			new_row += [image[row][col]]
 		new_img.append(new_row)
 	return new_img
-#End Problem 15
-
-#Used for testing, delete before submit
-def gen_mask(gscale_img):
-	maske_img = []
-	for row in range(len(gscale_img)):
-		new_row = []
-		for px in range(len(gscale_img[row])):
-			if gscale_img[row][px] > 150.5:
-				new_row += [0]
-			else:
-				new_row += [1]
-		maske_img.append(new_row)
-	return maske_img
 
 #Problem 16
 def mask_img(image, mask):
@@ -204,7 +193,7 @@ def filter_sunset(image, adjustment):
 		for px_rgb in range(len(image[row])):
 			new_px = []
 			for i in range(len(image[row][px_rgb])):
-				if not i:
+				if i == 0:
 					new_px += [image[row][px_rgb][i] + adjustment]
 				else:
 					new_px += [image[row][px_rgb][i]]
@@ -276,9 +265,8 @@ def warhol_effect(image):
 #End Problem 20
 
 def avg_adjacent_px(img, col, row, rgb_idx):
-	total = 0
+	total = img[row][col][rgb_idx]
 	num_vals = 1
-	total += img[row][col][rgb_idx]
 
 	if row > 0:
 		total += img[row - 1][col][rgb_idx]

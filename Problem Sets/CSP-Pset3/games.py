@@ -12,7 +12,7 @@ def make_c4_board(rows, columns):
 def print_c4_board(board):
 	for row in board:
 		for piece in range(len(row)):
-			if not piece:
+			if piece == 0:
 				print(f"|{row[piece]}|", end="")
 			else:
 				print(f"{row[piece]}|", end="")
@@ -85,9 +85,12 @@ def connect_four():
 	print_c4_board(board)
 
 	while True:
-		player = "R" if not p_turn else "Y"
+		if p_turn == 0:
+			player = "R"
+		else:
+			player = "Y"
 		p_move = int(input(f"Player {player}, enter a column (1 - {columns}): ")) - 1
-		if p_move not in range(0, columns):
+		if not 0 <= p_move < columns:
 			continue
 
 		n_board = move_c4_piece(p_move, board, player)
@@ -105,7 +108,10 @@ def connect_four():
 			print("Cat Game!")
 			break
 
-		p_turn = 1 if not p_turn else 0
+		if p_turn == 0:
+			p_turn = 1
+		else:
+			p_turn = 0
 #End Problem 4
 
 def get_adjacent_bombs(board):
@@ -191,7 +197,7 @@ def minesweeper(height, width, difficulty_pct):
 	print_ms_board(display_board)
 
 	while True:
-		p_move = input(f"Enter a move, (row 1 - {height})(column 1 - {width}): ").strip()
+		p_move = input(f"Enter a move, (row 1 - {height})(column 1 - {width}): ")
 		if len(p_move) != 2:
 			continue
 		p_move = (int(p_move[0]) - 1, int(p_move[1]) - 1)
@@ -299,7 +305,10 @@ def make_hitori_tf(puzzle):
 	for row in puzzle:
 		new_row = []
 		for val in row:
-			new_row += [True] if val != 0 else [False]
+			if val != 0:
+				new_row += [True]
+			else:
+				new_row += [False]
 		new_puzzle += [new_row]
 	return new_puzzle
 
@@ -376,7 +385,7 @@ def hitori(puzzle):
 	print_hitori_board(puzzle)
 
 	while True:
-		move = input(f"Enter a move, (row 1 - {len(puzzle)})(col 1 - {len(puzzle[0])}): ").strip()
+		move = input(f"Enter a move, (row 1 - {len(puzzle)})(col 1 - {len(puzzle[0])}): ")
 		if not hitori_valid_move(move, puzzle):
 			continue
 		move = (int(move[0]) - 1, int(move[1]) - 1)
