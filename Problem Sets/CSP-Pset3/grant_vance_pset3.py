@@ -67,6 +67,8 @@ def limit_255(image):
 		for px in row:
 			if px >= 255:
 				new_row += [255]
+			elif px <= 0:
+				new_row += [0]
 			else:
 				new_row += [px]
 		lim_img.append(new_row)
