@@ -1,44 +1,6 @@
 import sys
 import os
 import subprocess
-
-if not os.path.exists("assets"):
-  os.mkdir("assets")
-  
-sys.path.append("assets")
-
-dependencies = ["Pillow", "numpy"]
-
-def is_package_installed(package_name, target_folder):
-  """ Check if package_name is installed to a specific target_folder """
-  if package_name == "Pillow":
-    package_name = "PIL"
-  
-  package_folder = os.path.join(target_folder, package_name)
-
-  return os.path.exists(package_folder)
-
-def install_package_to_folder(package_name, target_folder):
-  """ Installs package_name to target_folder using pip/pip3 """
-  if not is_package_installed(package_name, target_folder):
-    print(f"Installing: {package_name}...")
-    try:
-        with open(os.devnull, "w") as devnull:
-          try:
-            if os.name == "nt":
-              subprocess.check_call(['pip', 'install', '--target', target_folder, package_name], stdout=devnull, stderr=devnull)
-            else:
-              subprocess.check_call(['pip3', 'install', '--target', target_folder, package_name], stdout=devnull, stderr=devnull)
-          except subprocess.CalledProcessError:
-            raise Exception(f"pip must be installed, and you must have an internet connection. Verify with pip --version or pip3 --version on mac/Linux")
-
-    except subprocess.CalledProcessError:
-      raise Exception(f"Error installing {package_name}")
-
-for d in dependencies:
-  install_package_to_folder(d, "assets")
-
-
 from PIL import Image
 import numpy as np
 
