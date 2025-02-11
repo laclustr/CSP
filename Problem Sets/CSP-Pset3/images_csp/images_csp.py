@@ -49,11 +49,4 @@ def save_image(image, path):
     raise Exception(f"Something went wrong saving to {path}. Check that the image parameter is a 2D list of integers and that the path parameter is a valid path.")
 
 if __name__ == "__main__":
-  cat_gray = load_grayscale("cat.jpg")
-  cat_rgb  = load_rgb("cat.jpg")
-  
-  show_image(cat_gray)
-  show_image(cat_rgb)
-
-  save_image(cat_gray, "cat_gray.jpg")
-  save_image(cat_rgb, "cat_rgb.jpg")
+  pass
