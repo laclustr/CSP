@@ -41,11 +41,9 @@ def swap(li, idx1, idx2):
 #Problem 2
 def track_playcount_list(dic_lis):
 	for song in range(len(dic_lis) - 1, 0, -1):
-		swapped = False
 		for i in range(song):
 			if dic_lis[i]["playcount"] > dic_lis[i + 1]["playcount"]:
 				dic_lis = swap(dic_lis, i, i + 1)
-				swapped = True
 	return dic_lis[::-1]
 
 #Problem 2b
@@ -55,21 +53,31 @@ def print_sorted_table(dic_lis):
 		print(f"Title: {dic_lis[song]["title"]}, Artist: {dic_lis[song]["artist"]}, Year: {dic_lis[song]["year"]}")
 
 #Problem 3
+def rev_tuples(dic_lis):
+	new_dic = {}
+	for dic in range(len(dic_lis)):
+		if dic_lis[dic]["artist"] not in new_dic.keys():
+			new_dic[dic_lis[dic]["artist"]] = dic_lis[dic]["playcount"]
+		else:
+			new_dic[dic_lis[dic]["artist"]] += dic_lis[dic]["playcount"]
 
-tracks = load_tracks()
-print_sorted_table(tracks)
+	tup_lis = []
+	for key in new_dic.keys():
+		tup_lis.append((key, new_dic[key]))
 
+	for tup in range(len(tup_lis) - 1, 0, -1):
+		for i in range(tup):
+			if tup_lis[i][1] > tup_lis[i + 1][1]:
+				tup_lis = swap(tup_lis, i, i + 1)
+	return tup_lis[::-1]
 
+#Problem 3b
+def print_top25_pct(dic_lis):
+	tup_lis = rev_tuples(dic_lis)
 
+	total_plays = 0
+	for i in tup_lis:
+		total_plays += i[1]
 
-
-
-
-
-
-
-
-
-
-
-
+	for song in range(25):
+		print(f"{song}: {tup_lis[song][0]}, {(tup_lis[song][1] / total_plays) * 100:.1f}%")
