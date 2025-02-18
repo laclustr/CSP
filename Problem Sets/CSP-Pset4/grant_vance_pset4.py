@@ -29,21 +29,10 @@ def print_sideways_histogram(dic):
 		print(f"{str(year)[2:]}: {"#" * (dic[year] // countperhash)}")
 	print("--------------------------------")
 	print(f"# = {countperhash} counts")
-#End Problem 1b
-
-def swap(li, idx1, idx2):
-	temp = li[idx1]
-	li[idx1] = li[idx2]
-	li[idx2] = temp
-	return li
 
 #Problem 2
 def track_playcount_list(dic_lis):
-	for song in range(len(dic_lis) - 1, 0, -1):
-		for i in range(song):
-			if dic_lis[i]["playcount"] > dic_lis[i + 1]["playcount"]:
-				dic_lis = swap(dic_lis, i, i + 1)
-	return dic_lis[::-1]
+	return sorted(dic_lis, key=lambda x: x["playcount"], reverse=True)
 
 #Problem 2b
 def print_sorted_table(dic_lis):
@@ -64,11 +53,7 @@ def rev_tuples(dic_lis):
 	for key in new_dic.keys():
 		tup_lis.append((key, new_dic[key]))
 
-	for tup in range(len(tup_lis) - 1, 0, -1):
-		for i in range(tup):
-			if tup_lis[i][1] > tup_lis[i + 1][1]:
-				tup_lis = swap(tup_lis, i, i + 1)
-	return tup_lis[::-1]
+	return sorted(tup_lis, key=lambda x: x[1], reverse=True)
 
 #Problem 3b
 def print_top25_pct(dic_lis):

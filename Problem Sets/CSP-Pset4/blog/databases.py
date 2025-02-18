@@ -37,7 +37,7 @@ def login(users):
 			print("Invalid Username!")
 			continue
 
-		passwd = input("Enter a Password: ")
+		passwd = input("Enter a Password: ").strip()
 		if passwd != users[username]:
 			print("Invalid Password!")
 			continue
@@ -85,14 +85,54 @@ def make_post(active_user, posts, posts_path):
 			csvwrit = csv.writer(f, quoting=csv.QUOTE_ALL)
 			csvwrit.writerow([post["user"], post["timestamp"], post["title"], post["content"]])
 
+def follow_user(active_user, follows, follows_path, users):
+	print("\"exit()\" to exit")
 
+	followed_user = input("Enter a User to Follow: ").strip()
 
+	if (followed_user == "exit()" or 
+		followed_user not in users.keys() or 
+		followed_user == active_user):
+		return
 
+	if follows.get(active_user):
+		follows[active_user].append(followed_user)
+	else:
+		follows[active_user] = [followed_user]
 
+	with open(follows_path, "a", newline="") as f:
+		csvwrit = csv.writer(f, quoting=csv.QUOTE_ALL)
+		csvwrit.writerow([active_user, followed_user])
 
+def fetch_user_posts(user, posts, posts_path):
+	usr_posts = []
+	for post in posts:
+		if post["user"] == user:
+			usr_posts.append(post)
 
+	return sorted(usr_posts, key=lambda x: x["timestamp"], reverse=False)
 
+def fetch_followed_posts(follow_list, posts, posts_path):
+	followed_posts = []
+	for user in follow_list:
+		for post in posts:
+			if post["user"] == user:
+				followed_posts.append(post)
 
+	return sorted(followed_posts, key=lambda x: x["timestamp"], reverse=False)
+
+def fetch_other_user_posts(posts, posts_path, users):
+	while True:
+		user = input("Enter a User: ").strip()
+		if user not in users:
+			continue
+
+		usr_posts = []
+		for post in posts:
+			if post["user"] == user:
+				usr_posts.append(post)
+
+		return sorted(usr_posts, key=lambda x: x["timestamp"], reverse=False)
 
 if __name__ == "__main__":
 	pass

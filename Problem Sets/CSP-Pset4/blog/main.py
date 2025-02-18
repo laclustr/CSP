@@ -33,31 +33,19 @@ def main():
 			match get_response(logged_in_ops):
 				case 0:
 					databases.make_post(active_user, posts, posts_path)
-
-
-						
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+				case 1:
+					databases.follow_user(active_user, follows, follows_path, users)
+				case 2:
+					for post in databases.fetch_user_posts(active_user, posts, posts_path):
+						print_post(post)
+				case 3:
+					for post in databases.fetch_followed_posts(follows[active_user], posts, posts_path):
+						print_post(post)
+				case 4:
+					for post in databases.fetch_other_user_posts(posts, posts_path, users):
+						print_post(post)
+				case 5:
+					active_user = None
 
 if __name__ == "__main__":
 	main()
