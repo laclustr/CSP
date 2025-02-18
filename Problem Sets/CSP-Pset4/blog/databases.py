@@ -2,21 +2,17 @@ import csv
 import datetime
 
 def load_database(users_path, posts_path, follows_path):
-	data = []
-
 	users = {}
 	with open(users_path, "r") as f:
 		reader = csv.DictReader(f)
 		for row in reader:
-			users[row["username"]] = row["password"]	
-	data.append(users)
+			users[row["username"]] = row["password"]
 
 	posts = []
 	with open(posts_path, "r") as f:
 		reader = csv.DictReader(f)
 		for row in reader:
 			posts.append(row)	
-	data.append(posts)
 
 	follows = {}
 	with open(follows_path, "r") as f:
@@ -26,9 +22,8 @@ def load_database(users_path, posts_path, follows_path):
 				follows[row["follower"]] = [row["following"]]
 			else:
 				follows[row["follower"]].append(row["following"])
-	data.append(follows)
 
-	return data
+	return [users, posts, follows]
 
 def login(users):
 	while True:
@@ -59,6 +54,7 @@ def register(users, users_path):
 		with open(users_path, "a", newline="") as f:
 			csvwrit = csv.writer(f, quoting=csv.QUOTE_ALL)
 			csvwrit.writerow([new_user, new_passwd])
+		break
 
 def make_post(active_user, posts, posts_path):
 	print("\"exit()\" to exit")
