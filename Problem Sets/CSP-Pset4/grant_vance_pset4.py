@@ -1,5 +1,4 @@
 import csv
-import random
 
 #Load Tracks
 def load_tracks():
