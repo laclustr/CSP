@@ -18,12 +18,7 @@ def main():
 				case 0:
 					active_user = databases.login(users)
 				case 1:
-					while True:
-						register_ops = ["Register", "Back to Main Menu"]
-						print_ops(register_ops)
-						if get_response(register_ops) == 0:
-							databases.register(users, users_path)
-						break
+					databases.register(users, users_path)
 				case 2:
 					break
 		else:
@@ -42,8 +37,10 @@ def main():
 					for post in databases.fetch_followed_posts(follows[active_user], posts, posts_path):
 						print_post(post)
 				case 4:
-					for post in databases.fetch_other_user_posts(posts, posts_path, users):
-						print_post(post)
+					res = databases.fetch_other_user_posts(posts, posts_path, users)
+					if res:
+						for post in res:
+							print_post(post)
 				case 5:
 					active_user = None
 

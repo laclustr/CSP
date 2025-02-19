@@ -5,13 +5,10 @@ def print_ops(ops):
 def get_response(ops):
 	while True:
 		num = input("Enter an Option: ").strip()
-		try:
-			num = int(num) - 1
-			if num not in range(len(ops)):
-				continue
-			return num
-		except ValueError:
+		num = int(num) - 1
+		if num not in range(len(ops)):
 			continue
+		return num
 
 def print_post(post):
 	print("+" * 37)

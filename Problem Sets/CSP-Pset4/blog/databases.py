@@ -27,12 +27,17 @@ def load_database(users_path, posts_path, follows_path):
 
 def login(users):
 	while True:
+		print("\"exit()\" to exit")
 		username = input("Enter a Username: ").strip()
+		if username == "exit()":
+			return None
 		if username not in users.keys():
 			print("Invalid Username!")
 			continue
 
 		passwd = input("Enter a Password: ").strip()
+		if passwd == "exit()":
+			return None
 		if passwd != users[username]:
 			print("Invalid Password!")
 			continue
@@ -119,7 +124,10 @@ def fetch_followed_posts(follow_list, posts, posts_path):
 
 def fetch_other_user_posts(posts, posts_path, users):
 	while True:
+		print("\"exit()\" to exit")
 		user = input("Enter a User: ").strip()
+		if user == "exit()":
+			break
 		if user not in users:
 			continue
 
