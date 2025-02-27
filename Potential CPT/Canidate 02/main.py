@@ -4,19 +4,17 @@ new languages. It'll feature some sort of game element and allow
 users to input custom word lists they'd like to work on. Idk yet,
 but I hope it works.
 """
-VERSION = "0.01"
+# VERSION = "0.01"
 
 try:
     import sys
     import random
     import math
-    import os
-    import getopt
-    import pygame
     from datetime import datetime
     from socket import *
+    import pygame
     from pygame.locals import *
-except (ImportError, err):
+except ImportError as err:
     print(f"couldn't load module. {err}")
     sys.exit(2)
 
@@ -35,7 +33,7 @@ def main():
 
 	rect = pygame.Rect(20, 20, 640, 40)
 	rect_color = "black"
-	font = pygame.font.SysFont("arialrounded", 40)
+	font = pygame.font.SysFont("Arial", 30)
 
 	running = True
 	while running:
@@ -49,17 +47,17 @@ def main():
 		keys = pygame.key.get_pressed()
 		mouse_pressed = pygame.mouse.get_pressed(num_buttons=3)
 		mouse_pos = pygame.mouse.get_pos()
-		rect_hover = mouse_pos[0] in range(rect.left, rect.left + rect.width + 1) and mouse_pos[1] in range(rect.top, rect.top + rect.height + 1)
+		rect_hover = rect.collidepoint(mouse_pos)
 
 		if rect_hover and mouse_pressed[0]:
 			rect_color = "orange"
-			screen.blit(font.render("Button Pressed!", False, (255, 255, 255)), (rect.x + 10, rect.y + 7))
+			screen.blit(font.render("Button Pressed!", True, (255, 255, 255)), (rect.x + 10, rect.y + 5))
 		elif rect_hover:
 			rect_color = "gray"
-			screen.blit(font.render("Button Hovered!", False, (255, 255, 255)), (rect.x + 10, rect.y + 7))
+			screen.blit(font.render("Button Hovered!", True, (255, 255, 255)), (rect.x + 10, rect.y + 5))
 		else:
 			rect_color = "black"
-			screen.blit(font.render("Button!", False, (255, 255, 255)), (rect.x + 10, rect.y + 7))
+			screen.blit(font.render("Button!", True, (255, 255, 255)), (rect.x + 10, rect.y + 5))
 
 		window_size = pygame.display.get_window_size()
 		if rect.left > window_size[0]:
@@ -80,25 +78,6 @@ def main():
 
 
 if __name__ == "__main__": main()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
