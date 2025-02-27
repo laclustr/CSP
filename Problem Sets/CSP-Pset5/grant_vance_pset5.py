@@ -74,4 +74,4 @@ class Jar:
 		return total
 
 	def __str__(self):
-		return f"{len(self.cookies)} 🍪"
+		return f"{len(self.cookies)}"
