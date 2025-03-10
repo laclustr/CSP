@@ -1,6 +1,4 @@
 import pygame
-from pygame import K_RETURN
-
 import Game_Board
 import random
 from CONSTS import *
@@ -21,6 +19,8 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.KEYDOWN and board.win():
+                running = False
 
 
         if not board.win():
@@ -38,8 +38,6 @@ def main():
             text = font.render("You Win!", True, BLACK)
             text_rect = text.get_rect(center=(DISPLAY_WIDTH // 2, DISPLAY_HEIGHT // 2))
             screen.blit(text, text_rect)
-            if pygame.key.get_pressed()[K_RETURN]:
-                break
 
         pygame.display.flip()
         clock.tick(FPS)

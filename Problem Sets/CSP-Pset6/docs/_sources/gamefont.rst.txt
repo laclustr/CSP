@@ -1,0 +1,7 @@
+gamefont module
+===============
+
+.. automodule:: gamefont
+   :members:
+   :show-inheritance:
+   :undoc-members:
