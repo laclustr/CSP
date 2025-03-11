@@ -1,9 +1,5 @@
 import pygame
-from settings import (
-    SCREEN_WIDTH, SCREEN_HEIGHT,
-    PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_SPEED,
-    WHITE
-)
+from settings import *
 
 class Paddle:
     """
@@ -58,12 +54,18 @@ class Paddle:
         Args:
             dt (int): The time in milliseconds since the last frame, used to calculate
             movement with consistent speed across frames.
-
-        TODO:
-            - Handle user input to move the paddle up or down.
-            - Implement delta time-based movement.
         """
-        raise NotImplementedError
+        keys = pygame.key.get_pressed()
+
+        if (keys[pygame.K_w] and self.playernum == 1) or (keys[pygame.K_UP] and self.playernum == 2):
+            self.rect.y -= self.speed * dt
+        if (keys[pygame.K_s] and self.playernum == 1) or (keys[pygame.K_DOWN] and self.playernum == 2):
+            self.rect.y += self.speed * dt
+
+        if self.rect.bottom >= SCREEN_HEIGHT:
+            self.rect.bottom = SCREEN_HEIGHT
+        if self.rect.y <= 0:
+            self.rect.y = 0
 
     def reset(self):
         """

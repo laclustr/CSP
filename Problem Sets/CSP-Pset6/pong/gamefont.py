@@ -1,8 +1,5 @@
 import pygame
-from settings import (
-    SM_FONT_SIZE, MED_FONT_SIZE, LG_FONT_SIZE,
-    WHITE
-)
+from settings import *
 
 class GameFont:
     """

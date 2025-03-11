@@ -1,9 +1,6 @@
 import pygame
-from settings import (
-    BALL_SIZE, BALL_SPEED_X, BALL_SPEED_Y, SPEED_INCREASE,
-    SCREEN_HEIGHT, SCREEN_WIDTH,
-    WHITE
-)
+
+from settings import *
 
 class Ball:
     """
@@ -50,6 +47,21 @@ class Ball:
         """
         self.rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 
+    def update(self, dt, paddles):
+        self.rect.x += self.speed[0] * dt / 5
+        self.rect.y += self.speed[1] * dt / 5
+
+        if self.hit_wall():
+            self.bounce("wall")
+
+        if self.collides(paddles[0]):
+            self.bounce("paddle")
+            self.rect.left = paddles[0].rect.right
+        elif self.collides(paddles[1]):
+            self.bounce("paddle")
+            self.rect.right = paddles[1].rect.left
+
+
     def bounce(self, obj):
         """
         Handles the logic for bouncing the ball off walls and paddles.
@@ -62,17 +74,14 @@ class Ball:
         Raises:
             ValueError: If the object is not "wall" or "paddle".
 
-        TODO:
-            Implement the actual bouncing logic.
         """
         if obj not in {"wall", "paddle"}:
             raise ValueError("Ball can only bounce off walls and paddles.")
         if obj == "wall":
-            pass  # Logic for bouncing off walls goes here.
+            self.speed[1] = -self.speed[1]
         elif obj == "paddle":
-            pass  # Logic for bouncing off paddles goes here.
-
-        raise NotImplementedError()
+            self.speed[0] = -self.speed[0] * (SPEED_INCREASE + 1)
+            self.speed[1] *= (SPEED_INCREASE + 1)
 
     def collides(self, other):
         """
@@ -84,10 +93,8 @@ class Ball:
         Returns:
             bool: True if the ball collides with the paddle, False otherwise.
 
-        TODO:
-            Implement collision detection logic.
         """
-        raise NotImplementedError()
+        return self.rect.colliderect(other.rect)
 
     def draw(self, screen):
         """
@@ -105,10 +112,8 @@ class Ball:
         Returns:
             bool: True if the ball hits the top or bottom walls, False otherwise.
 
-        TODO:
-            Implement wall collision detection logic.
         """
-        raise NotImplementedError()
+        return self.rect.top < 0 or self.rect.bottom > SCREEN_HEIGHT
 
     def point_scored(self):
         """
@@ -120,7 +125,9 @@ class Ball:
                  1 if Player 1 scores a point.
                  0 if the ball is still in play and no point has been scored.
 
-        TODO:
-            Implement point-scoring logic.
         """
-        raise NotImplementedError()
+        if self.rect.left < 0:
+            return -1
+        if self.rect.right > SCREEN_WIDTH:
+            return 1
+        return 0
