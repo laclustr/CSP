@@ -1,5 +1,4 @@
 import pygame
-
 from settings import *
 
 class Ball:
@@ -48,18 +47,18 @@ class Ball:
         self.rect.center = (SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2)
 
     def update(self, dt, paddles):
-        self.rect.x += self.speed[0] * dt / 5
-        self.rect.y += self.speed[1] * dt / 5
+        self.rect.x += self.speed[0] * dt
+        self.rect.y += self.speed[1] * dt
 
         if self.hit_wall():
             self.bounce("wall")
 
         if self.collides(paddles[0]):
-            self.bounce("paddle")
             self.rect.left = paddles[0].rect.right
-        elif self.collides(paddles[1]):
             self.bounce("paddle")
+        elif self.collides(paddles[1]):
             self.rect.right = paddles[1].rect.left
+            self.bounce("paddle")
 
 
     def bounce(self, obj):
@@ -79,9 +78,15 @@ class Ball:
             raise ValueError("Ball can only bounce off walls and paddles.")
         if obj == "wall":
             self.speed[1] = -self.speed[1]
+            WALL_SOUND.play()
         elif obj == "paddle":
             self.speed[0] = -self.speed[0] * (SPEED_INCREASE + 1)
             self.speed[1] *= (SPEED_INCREASE + 1)
+            if self.speed[0] > MAX_BALL_SPEED:
+                self.speed[0] = MAX_BALL_SPEED
+            if self.speed[1] > MAX_BALL_SPEED:
+                self.speed[1] = MAX_BALL_SPEED
+            PADDLE_SOUND.play()
 
     def collides(self, other):
         """
@@ -127,7 +132,9 @@ class Ball:
 
         """
         if self.rect.left < 0:
+            SCORE_SOUND.play()
             return -1
         if self.rect.right > SCREEN_WIDTH:
+            SCORE_SOUND.play()
             return 1
         return 0

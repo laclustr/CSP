@@ -1,4 +1,7 @@
 import pygame
+from mistune.toc import normalize_toc_item
+from pygame.transform import threshold
+
 from settings import *
 
 class Paddle:
@@ -47,7 +50,13 @@ class Paddle:
         """
         screen.blit(self.surf, self.rect)
 
-    def update(self, dt):
+    def _ai_move(self, dt, ball):
+        if ball.rect.centery > self.rect.centery + AI_THRESHOLD:
+            self.rect.y += self.speed * dt * AI_SMOOTHER
+        elif ball.rect.centery < self.rect.centery - AI_THRESHOLD:
+            self.rect.y -= self.speed * dt * AI_SMOOTHER
+
+    def update(self, dt, ai, ball):
         """
         Updates the paddle's position based on user input and delta time.
 
@@ -57,15 +66,24 @@ class Paddle:
         """
         keys = pygame.key.get_pressed()
 
-        if (keys[pygame.K_w] and self.playernum == 1) or (keys[pygame.K_UP] and self.playernum == 2):
+        if keys[pygame.K_w] and self.playernum == 1:
             self.rect.y -= self.speed * dt
-        if (keys[pygame.K_s] and self.playernum == 1) or (keys[pygame.K_DOWN] and self.playernum == 2):
+        if keys[pygame.K_UP] and self.playernum == 2 and not ai:
+            self.rect.y -= self.speed * dt
+        if keys[pygame.K_s] and self.playernum == 1:
             self.rect.y += self.speed * dt
+        if keys[pygame.K_DOWN] and self.playernum == 2 and not ai:
+            self.rect.y += self.speed * dt
+
+        if ai and self.playernum == 2: self._ai_move(dt, ball)
 
         if self.rect.bottom >= SCREEN_HEIGHT:
             self.rect.bottom = SCREEN_HEIGHT
         if self.rect.y <= 0:
             self.rect.y = 0
+
+    def win(self):
+        return self.score >= WIN_POINTS
 
     def reset(self):
         """

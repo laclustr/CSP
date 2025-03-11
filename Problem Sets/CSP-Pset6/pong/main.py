@@ -1,5 +1,6 @@
 import random
 import pygame
+from fontTools.designspaceLib.split import defaultMakeInstanceFilename
 
 from ball import Ball
 from gamefont import GameFont
@@ -18,10 +19,10 @@ font.add_size("score", 84)
 player1 = Paddle(1)
 player2 = Paddle(2)
 ball    = Ball()
-ai = False
+ai      = False
 
 welcome_selector = True
-curr_server = "Player1"
+curr_server = "player1"
 
 state = "welcome"
 
@@ -46,22 +47,21 @@ while running:
 			welcome_selector = True
 		elif pygame.K_RIGHT in keydown_keys:
 			welcome_selector = False
+
+		font.set_color(BLUE)
 		if welcome_selector:
-			font.set_color(BLUE)
 			font.print(screen, "1 PLAYER", SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2, True)
 			font.set_color(WHITE)
 			font.print(screen, "2 PLAYER", SCREEN_WIDTH - SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2, True)
 
 		if not welcome_selector:
-			font.set_color(BLUE)
 			font.print(screen, "2 PLAYER", SCREEN_WIDTH - SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2, True)
 			font.set_color(WHITE)
 			font.print(screen, "1 PLAYER", SCREEN_WIDTH // 4, SCREEN_HEIGHT // 2, True)
 
 		if pygame.K_RETURN in keydown_keys:
 			state = "serve"
-			ai = not welcome_selector
-
+			ai = welcome_selector
 
 	elif state == "serve":
 		screen.fill(GRAY)
@@ -77,44 +77,80 @@ while running:
 		player2.draw(screen)
 		ball.draw(screen)
 
-		player1.update(dt)
-		player2.update(dt)
+		player1.update(dt, ai, ball)
+		player2.update(dt, ai, ball)
 
 		if pygame.K_RETURN in keydown_keys:
-			ball.speed = [BALL_SPEED_X, -BALL_SPEED_Y]
+			randspeed = random.uniform(-BALL_RAND_SPEED_Y, BALL_RAND_SPEED_Y)
+			randspeed += 1 if randspeed >= 0 else -1
+			if curr_server == "player1":
+				ball.speed = [BALL_SPEED_X * abs(randspeed), BALL_SPEED_Y * randspeed]
+			elif curr_server == "player2":
+				ball.speed = [-BALL_SPEED_X * abs(randspeed), BALL_SPEED_Y * randspeed]
 			state = "play"
 
 	elif state == "pause":
-		"""
-			TODO:
-		"""
-		pass
+		screen.fill(GRAY)
+		player1.draw(screen)
+		player2.draw(screen)
+		ball.draw(screen)
+
+		font.set_size("medium")
+		font.set_color(WHITE)
+		font.print(screen, f"Paused", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5)
+		font.print(screen, f"Press \"p\" to continue playing.", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5 + font.get_size())
+
+		if pygame.K_p in keydown_keys:
+			state = "play"
+
 	elif state == "play":
 		screen.fill(GRAY)
 
-		player1.update(dt)
-		player2.update(dt)
+		player1.update(dt, ai, ball)
+		player2.update(dt, ai, ball)
 		ball.update(dt, [player1, player2])
 
 		match ball.point_scored():
 			case -1:
 				player2.score += 1
+				ball.reset()
+				player1.reset()
+				player2.reset()
+				curr_server = "player2" if curr_server == "player1" else "player1"
 				state = "serve"
 			case 1:
-				player2.score += 1
+				player1.score += 1
 				ball.reset()
+				player1.reset()
+				player2.reset()
+				curr_server = "player2" if curr_server == "player1" else "player1"
 				state = "serve"
-			case 0:
-				pass
 
 		player1.draw(screen)
 		player2.draw(screen)
 		ball.draw(screen)
+
+		if pygame.K_p in keydown_keys:
+			state = "pause"
+		if player1.win() or player2.win():
+			state = "gameover"
+
 	elif state == "gameover":
-		"""
-			TODO:
-		"""
-		pass
+		win_num = player1.playernum if player1.win() else player2.playernum
+		screen.fill(GRAY)
+		font.set_size("score")
+		font.set_color(WHITE)
+		font.print(screen, f"Game Over", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5)
+		font.print(screen, f"Player {win_num} Wins!", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5 + font.get_size())
+		dist = font.get_size() * 2
+		font.set_size("medium")
+		font.print(screen, f"Press Enter to Play Again", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 5 + dist)
+
+		if pygame.K_RETURN in keydown_keys:
+			player1 = Paddle(1)
+			player2 = Paddle(2)
+			curr_server = "player1"
+			state = "welcome"
 
 	pygame.display.flip()
 
