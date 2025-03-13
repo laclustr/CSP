@@ -50,16 +50,16 @@ class Paddle:
 
     def _ai_move(self, dt, ball):
         adj = self.speed * dt
-        if ball.rect.y > self.rect.y + adj or ball.rect.y < self.rect.y - adj:
-            if ball.rect.y > self.rect.y + AI_THRESHOLD:
-                self.rect.y += adj
-            elif ball.rect.y < self.rect.y - AI_THRESHOLD:
-                self.rect.y -= adj
+        if ball.rect.centery > self.rect.centery + adj or ball.rect.centery < self.rect.centery - adj:
+            if ball.rect.centery > self.rect.centery + AI_THRESHOLD:
+                self.rect.centery += adj
+            elif ball.rect.centery < self.rect.centery - AI_THRESHOLD:
+                self.rect.centery -= adj
         else:
-            if ball.rect.y > self.rect.y + AI_THRESHOLD:
-                self.rect.y += ball.speed[1] * dt
-            elif ball.rect.y < self.rect.y - AI_THRESHOLD:
-                self.rect.y -= ball.speed[1] * dt
+            if ball.rect.centery > self.rect.centery + AI_THRESHOLD:
+                self.rect.centery += ball.speed[1] * dt
+            elif ball.rect.centery < self.rect.centery - AI_THRESHOLD:
+                self.rect.centery -= ball.speed[1] * dt
 
     def update(self, dt, ai, ball):
         """
@@ -99,3 +99,15 @@ class Paddle:
             self.rect.center = (30, SCREEN_HEIGHT // 2)
         else:
             self.rect.center = (SCREEN_WIDTH - 30, SCREEN_HEIGHT // 2)
+
+    def reset_size(self, szeorspd, both=False):
+        if szeorspd or both:
+            self.surf = pygame.Surface((PADDLE_WIDTH, PADDLE_HEIGHT))
+            self.surf.fill(WHITE)
+            self.rect = self.surf.get_rect()
+            if self.playernum == 1:
+                self.rect.center = (30, SCREEN_HEIGHT // 2)
+            else:
+                self.rect.center = (SCREEN_WIDTH - 30, SCREEN_HEIGHT // 2)
+        if not szeorspd or both:
+            self.speed = PADDLE_SPEED

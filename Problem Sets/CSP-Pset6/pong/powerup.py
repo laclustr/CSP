@@ -49,16 +49,12 @@ class PowerUp:
             ball.speed[0] *= self.speed_mul
             ball.speed[1] *= self.speed_mul
         if self.power_type == "paddle_size":
-            if ball.speed[0] > 0:
-                self.prev_val = [paddles[0].rect.copy(), paddles[0].surf.copy(), True]
-                paddles[0].surf = pygame.transform.scale(paddles[0].surf, (PADDLE_WIDTH, PADDLE_HEIGHT * self.paddle_size))
-                paddles[0].rect = paddles[0].surf.get_rect()
-                paddles[0].rect.center = (30, self.prev_val[0].center[1])
-            elif ball.speed[0] < 0:
-                self.prev_val = [paddles[1].rect.copy(), paddles[1].surf.copy(), False]
-                paddles[1].surf = pygame.transform.scale(paddles[1].surf, (PADDLE_WIDTH, PADDLE_HEIGHT * self.paddle_size))
-                paddles[1].rect = paddles[1].surf.get_rect()
-                paddles[1].rect.center = (SCREEN_WIDTH - 30, self.prev_val[0].center[1])
+            pidx = 0 if ball.speed[0] > 0 else 1
+            oldrect = paddles[pidx].rect.copy()
+            paddles[pidx].surf = pygame.transform.scale(paddles[pidx].surf, (PADDLE_WIDTH, PADDLE_HEIGHT * self.paddle_size))
+            paddles[pidx].rect = paddles[pidx].surf.get_rect()
+            paddles[pidx].rect.center = (30, oldrect.centery) if paddles[pidx].playernum == 1 else (SCREEN_WIDTH - 30, oldrect.centery)
+            self.prev_val = True if pidx == 0 else False
 
         if self.power_type == "paddle_speed":
             if ball.speed[0] > 0:
@@ -78,21 +74,9 @@ class PowerUp:
             if self.power_type == "ball_speed_mul":
                 ball.speed = self.prev_val
             if self.power_type == "paddle_size":
-                if self.prev_val[2]:
-                    player_cy = paddles[0].rect.center[1]
-                    paddles[0].surf = self.prev_val[1]
-                    paddles[0].rect = self.prev_val[0]
-                    paddles[0].rect.center = (30, player_cy)
-                else:
-                    player2_cy = paddles[1].rect.center[1]
-                    paddles[1].surf = self.prev_val[1]
-                    paddles[1].rect = self.prev_val[0]
-                    paddles[1].rect.center = (SCREEN_WIDTH - 30, player2_cy)
+                paddles[0].reset_size(True) if self.prev_val else paddles[1].reset_size(True)
             if self.power_type == "paddle_speed":
-                if self.prev_val[1]:
-                    paddles[0].speed = self.prev_val[0]
-                elif not self.prev_val[1]:
-                    paddles[1].speed = self.prev_val[0]
+                paddles[0].reset_size(False) if self.prev_val[1] else paddles[1].reset_size(False)
 
             return [ball, paddles]
         return None

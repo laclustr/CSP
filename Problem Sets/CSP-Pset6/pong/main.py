@@ -147,36 +147,23 @@ while running:
 		match ball.point_scored():
 			case -1:
 				player2.score += 1
-				for power in active_powerups:
-					res = power.remove(ball, [player1, player2], True)
-					if res:
-						ball, [player1, player2] = res
-				active_powerups = []
-				ball.reset()
-				p1score = player1.score
-				p2score = player2.score
-				player1 = Paddle(1)
-				player2 = Paddle(2)
-				player1.score = p1score
-				player2.score = p2score
-				curr_server = "Player 2" if curr_server == "Player 1" else "Player 1"
-				state = "serve"
 			case 1:
 				player1.score += 1
-				p1score = player1.score
-				p2score = player2.score
-				for power in active_powerups:
-					res = power.remove(ball, [player1, player2], True)
-					if res:
-						ball, [player1, player2] = res
-				active_powerups = []
-				ball.reset()
-				player1 = Paddle(1)
-				player2 = Paddle(2)
-				player1.score = p1score
-				player2.score = p2score
-				curr_server = "Player 2" if curr_server == "Player 1" else "Player 1"
-				state = "serve"
+
+		if ball.point_scored() != 0:
+			for power in active_powerups:
+				res = power.remove(ball, [player1, player2], True)
+				if res:
+					ball, [player1, player2] = res
+			active_powerups = []
+			ball.reset()
+			player1.reset()
+			player1.reset_size(True, True)
+			player2.reset()
+			player2.reset_size(True, True)
+			curr_server = "Player 2" if curr_server == "Player 1" else "Player 1"
+			state = "serve"
+
 
 		player1.draw(screen)
 		player2.draw(screen)
