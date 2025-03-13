@@ -1,7 +1,0 @@
-paddle module
-=============
-
-.. automodule:: paddle
-   :members:
-   :show-inheritance:
-   :undoc-members:
