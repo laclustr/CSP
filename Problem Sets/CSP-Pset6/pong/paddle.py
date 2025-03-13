@@ -100,14 +100,17 @@ class Paddle:
         else:
             self.rect.center = (SCREEN_WIDTH - 30, SCREEN_HEIGHT // 2)
 
-    def reset_size(self, szeorspd, both=False):
-        if szeorspd or both:
-            self.surf = pygame.Surface((PADDLE_WIDTH, PADDLE_HEIGHT))
-            self.surf.fill(WHITE)
-            self.rect = self.surf.get_rect()
-            if self.playernum == 1:
-                self.rect.center = (30, SCREEN_HEIGHT // 2)
-            else:
-                self.rect.center = (SCREEN_WIDTH - 30, SCREEN_HEIGHT // 2)
-        if not szeorspd or both:
-            self.speed = PADDLE_SPEED
+    def reset_size(self):
+        yval = self.rect.centery
+        xval = self.rect.centerx
+        self.surf = pygame.Surface((PADDLE_WIDTH, PADDLE_HEIGHT))
+        self.surf.fill(WHITE)
+        self.rect = self.surf.get_rect()
+        if self.playernum == 1:
+            self.rect.center = (xval, yval)
+        else:
+            self.rect.center = (xval, yval)
+
+
+    def reset_speed(self):
+        self.speed = PADDLE_SPEED

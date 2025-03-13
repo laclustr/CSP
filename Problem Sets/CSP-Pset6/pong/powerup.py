@@ -8,13 +8,10 @@ class PowerUp:
         self.surf = pygame.Surface((POWER_SIZE, POWER_SIZE))
         self.rect = self.surf.get_rect()
         self.num = num
-        self.speed_mul = num if power_type == "ball_speed_mul" else None
-        self.paddle_size = num if power_type == "paddle_size" else None
-        self.paddle_speed = num if power_type == "paddle_speed" else None
         self.color = WHITE
         self.applied = False
         self.visible = False
-        self.time_remaining = 5000
+        self.time_remaining = POWER_SPAWN_LEN
         self.prev_val = None
 
         self._set_color(power_type)
@@ -22,6 +19,7 @@ class PowerUp:
         self.rect.center = (-1, -1)
 
     def draw(self, screen, dt):
+        print(self.time_remaining) if self.applied else None
         self.time_remaining -= dt
         if self.rect.center == (-1, -1):
             self._set_pos()
@@ -44,27 +42,28 @@ class PowerUp:
     def apply(self, ball, paddles):
         self.applied = True
         self.visible = False
+        self.time_remaining = POWER_APPLIED_LEN
         if self.power_type == "ball_speed_mul":
             self.prev_val = ball.speed.copy()
-            ball.speed[0] *= self.speed_mul
-            ball.speed[1] *= self.speed_mul
+            ball.speed[0] *= self.num
+            ball.speed[1] *= self.num
         if self.power_type == "paddle_size":
             pidx = 0 if ball.speed[0] > 0 else 1
             oldrect = paddles[pidx].rect.copy()
-            paddles[pidx].surf = pygame.transform.scale(paddles[pidx].surf, (PADDLE_WIDTH, PADDLE_HEIGHT * self.paddle_size))
+            paddles[pidx].surf = pygame.transform.scale(paddles[pidx].surf, (PADDLE_WIDTH, PADDLE_HEIGHT * self.num))
             paddles[pidx].rect = paddles[pidx].surf.get_rect()
             paddles[pidx].rect.center = (30, oldrect.centery) if paddles[pidx].playernum == 1 else (SCREEN_WIDTH - 30, oldrect.centery)
-            self.prev_val = True if pidx == 0 else False
+            self.prev_val = "player1" if pidx == 0 else "player2"
 
         if self.power_type == "paddle_speed":
             if ball.speed[0] > 0:
-                self.prev_val = [paddles[0].speed, True]
-                paddles[0].speed *= self.paddle_speed
+                self.prev_val = "player1"
+                paddles[0].speed *= self.num
             elif ball.speed[0] < 0:
-                self.prev_val = [paddles[1].speed, False]
-                paddles[1].speed *= self.paddle_speed
+                self.prev_val = "player2"
+                paddles[1].speed *= self.num
         self._set_pos()
-        return [ball, paddles]
+        return ball, paddles
 
     def remove(self, ball, paddles, reset=False):
         if reset:
@@ -72,11 +71,19 @@ class PowerUp:
         if self.applied and (self.time_remaining <= 0 or reset):
             self.applied = False
             if self.power_type == "ball_speed_mul":
-                ball.speed = self.prev_val
+                if abs(ball.speed[0]) == ball.speed[0] and abs(ball.speed[1]) == ball.speed[1]:
+                    ball.set_speed(abs(self.prev_val[0]), abs(self.prev_val[1]))
+                elif -abs(ball.speed[0]) == ball.speed[0] and abs(ball.speed[1]) == ball.speed[1]:
+                    ball.set_speed(-abs(self.prev_val[0]), abs(self.prev_val[1]))
+                elif abs(ball.speed[0]) == ball.speed[0] and -abs(ball.speed[1]) == ball.speed[1]:
+                    ball.set_speed(abs(self.prev_val[0]), -abs(self.prev_val[1]))
+                elif -abs(ball.speed[0]) == ball.speed[0] and -abs(ball.speed[1]) == ball.speed[1]:
+                    ball.set_speed(-abs(self.prev_val[0]), -abs(self.prev_val[1]))
+
             if self.power_type == "paddle_size":
-                paddles[0].reset_size(True) if self.prev_val else paddles[1].reset_size(True)
+                paddles[0].reset_size() if self.prev_val == "player1" else paddles[1].reset_size()
             if self.power_type == "paddle_speed":
-                paddles[0].reset_size(False) if self.prev_val[1] else paddles[1].reset_size(False)
+                paddles[0].reset_speed() if self.prev_val == "player1" else paddles[1].reset_size()
 
             return [ball, paddles]
         return None

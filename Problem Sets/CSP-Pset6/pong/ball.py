@@ -136,3 +136,11 @@ class Ball:
             SCORE_SOUND.play()
             return 1
         return 0
+
+    def set_speed(self, xval=None, yval=None):
+        if not (xval and yval):
+            return
+        if xval:
+            self.speed[0] = xval
+        if yval:
+            self.speed[1] = yval

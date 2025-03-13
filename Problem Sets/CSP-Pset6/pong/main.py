@@ -24,8 +24,8 @@ all_powerups = [
 	PowerUp("ball_speed_mul", 1.5),
 	PowerUp("paddle_size", 1.5),
 	PowerUp("paddle_size", 0.4),
-	PowerUp("paddle_speed", 0.75),
-	PowerUp("paddle_speed", 1.5)
+	PowerUp("paddle_speed", 0.2),
+	PowerUp("paddle_speed", 2)
 ]
 active_powerups = []
 
@@ -134,14 +134,9 @@ while running:
 					res = power.apply(ball, [player1, player2])
 					ball, [player1, player2] = res
 			if power.time_remaining <= 0:
-				same_types = []
-				for pwr in active_powerups:
-					if pwr.power_type == power.power_type and id(power) != id(pwr) and pwr.time_remaining > 0:
-						same_types.append(pwr)
-				if len(same_types) == 0:
-					res = power.remove(ball, [player1, player2])
-					if res:
-						ball, [player1, player2] = res
+				res = power.remove(ball, [player1, player2])
+				if res:
+					ball, [player1, player2] = res
 				active_powerups.remove(power)
 
 		match ball.point_scored():
@@ -157,13 +152,16 @@ while running:
 					ball, [player1, player2] = res
 			active_powerups = []
 			ball.reset()
+
+			player1.reset_size()
+			player1.reset_speed()
 			player1.reset()
-			player1.reset_size(True, True)
+			player2.reset_size()
+			player2.reset_speed()
 			player2.reset()
-			player2.reset_size(True, True)
+
 			curr_server = "Player 2" if curr_server == "Player 1" else "Player 1"
 			state = "serve"
-
 
 		player1.draw(screen)
 		player2.draw(screen)
