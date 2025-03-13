@@ -21,7 +21,6 @@ ball    = Ball()
 ai      = False
 
 all_powerups = [
-	PowerUp("ball_speed_mul", 0.5),
 	PowerUp("ball_speed_mul", 1.5),
 	PowerUp("paddle_size", 1.5),
 	PowerUp("paddle_size", 0.4),
@@ -154,12 +153,18 @@ while running:
 						ball, [player1, player2] = res
 				active_powerups = []
 				ball.reset()
+				p1score = player1.score
+				p2score = player2.score
 				player1 = Paddle(1)
 				player2 = Paddle(2)
+				player1.score = p1score
+				player2.score = p2score
 				curr_server = "Player 2" if curr_server == "Player 1" else "Player 1"
 				state = "serve"
 			case 1:
 				player1.score += 1
+				p1score = player1.score
+				p2score = player2.score
 				for power in active_powerups:
 					res = power.remove(ball, [player1, player2], True)
 					if res:
@@ -168,6 +173,8 @@ while running:
 				ball.reset()
 				player1 = Paddle(1)
 				player2 = Paddle(2)
+				player1.score = p1score
+				player2.score = p2score
 				curr_server = "Player 2" if curr_server == "Player 1" else "Player 1"
 				state = "serve"
 
