@@ -145,8 +145,6 @@ while running:
 						ball, [player1, player2] = res
 				active_powerups.remove(power)
 
-
-
 		match ball.point_scored():
 			case -1:
 				player2.score += 1

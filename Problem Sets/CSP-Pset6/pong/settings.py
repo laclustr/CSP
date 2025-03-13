@@ -34,7 +34,6 @@ RED    = (255, 0, 0)
 ORANGE = (255, 150, 28)
 YELLOW = (255, 255, 0)
 
-
 # FONT
 SM_FONT_SIZE  = 12
 MED_FONT_SIZE = 24

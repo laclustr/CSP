@@ -60,7 +60,6 @@ class Ball:
             self.rect.right = paddles[1].rect.left
             self.bounce("paddle")
 
-
     def bounce(self, obj):
         """
         Handles the logic for bouncing the ball off walls and paddles.
@@ -129,7 +128,6 @@ class Ball:
                 -1 if Player 2 scores a point.
                  1 if Player 1 scores a point.
                  0 if the ball is still in play and no point has been scored.
-
         """
         if self.rect.left < 0:
             SCORE_SOUND.play()

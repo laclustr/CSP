@@ -61,8 +61,6 @@ class Paddle:
             elif ball.rect.y < self.rect.y - AI_THRESHOLD:
                 self.rect.y -= ball.speed[1] * dt
 
-
-
     def update(self, dt, ai, ball):
         """
         Updates the paddle's position based on user input and delta time.
