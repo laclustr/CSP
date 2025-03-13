@@ -1,6 +1,8 @@
 from turtledemo.nim import SCREENWIDTH
 
 import pygame
+from sphinx.addnodes import centered
+
 from CONSTS import *
 
 settings = {
@@ -20,10 +22,18 @@ def draw_adjustment_menu(screen, board):
     rows_text = font.render(f"Rows: {settings['rows']}", True, BLACK)
     cols_text = font.render(f"Columns: {settings['cols']}", True, BLACK)
     mine_text = font.render(f"Mines: {settings['mines']}", True, BLACK)
+    start_text = font.render("Press Enter to Start", True, BLACK)
+    start_rect = start_text.get_rect(center=(DISPLAY_WIDTH // 2, DISPLAY_HEIGHT // 2 + 150))
 
     screen.blit(rows_text, (50, DIST_FROM_TOP / 2 + 50))
     screen.blit(cols_text, (50, DIST_FROM_TOP / 2 + 100))
     screen.blit(mine_text, (50, DIST_FROM_TOP / 2 + 150))
+    screen.blit(start_text, start_rect)
+
+    if not settings["mines"] + 9 < settings["rows"] * settings["cols"]:
+        start_text = font.render("Bomb Count too High!", True, RED)
+        start_rect = start_text.get_rect(center=(DISPLAY_WIDTH // 2, DISPLAY_HEIGHT // 2 + 75))
+        screen.blit(start_text, start_rect)
 
     plus_button = font.render("+", True, BLACK)
     minus_button = font.render("-", True, BLACK)

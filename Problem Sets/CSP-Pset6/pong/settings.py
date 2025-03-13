@@ -1,4 +1,5 @@
 import pygame
+
 pygame.mixer.init()
 
 # BALL
@@ -11,9 +12,14 @@ SPEED_INCREASE = 0.05
 MAX_BALL_SPEED = 3
 WIN_POINTS = 5
 
+# POWERS
+POWER_SIZE = 15
+POWER_X_OFFSET = 60
+POWER_Y_OFFSET = 20
+POWERUP_CHANCE = range(1, 100)
+
 # AI
 AI_THRESHOLD = 2
-AI_SMOOTHER = 0.7
 
 # SOUNDS
 PADDLE_SOUND = pygame.Sound("sounds/paddle_hit.wav")
@@ -21,9 +27,13 @@ SCORE_SOUND  = pygame.Sound("sounds/score.wav")
 WALL_SOUND   = pygame.Sound("sounds/wall_hit.wav")
 
 # COLORS
-GRAY  = (44, 44, 44)
-WHITE = (255, 255, 255)
-BLUE  = (120, 120, 255)
+GRAY   = (44, 44, 44)
+WHITE  = (255, 255, 255)
+BLUE   = (120, 120, 255)
+RED    = (255, 0, 0)
+ORANGE = (255, 150, 28)
+YELLOW = (255, 255, 0)
+
 
 # FONT
 SM_FONT_SIZE  = 12

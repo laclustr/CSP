@@ -12,6 +12,7 @@ def main():
     clock = pygame.time.Clock()
     running = True
     board = Board(N_ROWS, N_COLS, N_MINES)
+    font = pygame.font.Font(None, WIN_FONT_SIZE)
 
     game_state = "adjust"
 
@@ -32,7 +33,7 @@ def main():
                 if game_state == "adjust":
                     handle_adjustment_events(event)
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE and game_state == "adjust":
+                if event.key == pygame.K_RETURN and game_state == "adjust":
                     if settings["rows"] > 0 and settings["cols"] > 0 and settings["mines"] > 0 and settings["mines"] + 9 < settings["rows"] * settings["cols"]:
                         board = Board(settings["rows"], settings["cols"], settings["mines"])
                         game_state = "playing"

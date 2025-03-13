@@ -1,6 +1,4 @@
 import pygame
-from mistune.toc import normalize_toc_item
-from pygame.transform import threshold
 
 from settings import *
 
@@ -51,10 +49,19 @@ class Paddle:
         screen.blit(self.surf, self.rect)
 
     def _ai_move(self, dt, ball):
-        if ball.rect.centery > self.rect.centery + AI_THRESHOLD:
-            self.rect.y += self.speed * dt * AI_SMOOTHER
-        elif ball.rect.centery < self.rect.centery - AI_THRESHOLD:
-            self.rect.y -= self.speed * dt * AI_SMOOTHER
+        adj = self.speed * dt
+        if ball.rect.y > self.rect.y + adj or ball.rect.y < self.rect.y - adj:
+            if ball.rect.y > self.rect.y + AI_THRESHOLD:
+                self.rect.y += adj
+            elif ball.rect.y < self.rect.y - AI_THRESHOLD:
+                self.rect.y -= adj
+        else:
+            if ball.rect.y > self.rect.y + AI_THRESHOLD:
+                self.rect.y += ball.speed[1] * dt
+            elif ball.rect.y < self.rect.y - AI_THRESHOLD:
+                self.rect.y -= ball.speed[1] * dt
+
+
 
     def update(self, dt, ai, ball):
         """

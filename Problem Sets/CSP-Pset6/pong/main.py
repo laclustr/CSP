@@ -1,7 +1,6 @@
 import random
 import pygame
-from fontTools.designspaceLib.split import defaultMakeInstanceFilename
-
+from powerup import PowerUp, use_powerup
 from ball import Ball
 from gamefont import GameFont
 from paddle import Paddle
@@ -21,8 +20,18 @@ player2 = Paddle(2)
 ball    = Ball()
 ai      = False
 
+all_powerups = [
+	PowerUp("ball_speed_mul", 0.5),
+	PowerUp("ball_speed_mul", 1.5),
+	PowerUp("paddle_size", 1.5),
+	PowerUp("paddle_size", 0.4),
+	PowerUp("paddle_speed", 0.75),
+	PowerUp("paddle_speed", 1.5)
+]
+active_powerups = []
+
 welcome_selector = True
-curr_server = "player1"
+curr_server = "Player 1"
 
 state = "welcome"
 
@@ -83,9 +92,9 @@ while running:
 		if pygame.K_RETURN in keydown_keys:
 			randspeed = random.uniform(-BALL_RAND_SPEED_Y, BALL_RAND_SPEED_Y)
 			randspeed += 1 if randspeed >= 0 else -1
-			if curr_server == "player1":
+			if curr_server == "Player 1":
 				ball.speed = [BALL_SPEED_X * abs(randspeed), BALL_SPEED_Y * randspeed]
-			elif curr_server == "player2":
+			elif curr_server == "Player 2":
 				ball.speed = [-BALL_SPEED_X * abs(randspeed), BALL_SPEED_Y * randspeed]
 			state = "play"
 
@@ -106,24 +115,62 @@ while running:
 	elif state == "play":
 		screen.fill(GRAY)
 
+		ball.update(dt, [player1, player2])
 		player1.update(dt, ai, ball)
 		player2.update(dt, ai, ball)
-		ball.update(dt, [player1, player2])
+
+		if use_powerup(active_powerups):
+			pwrcopy = random.choice(all_powerups)
+			power = PowerUp(pwrcopy.power_type, pwrcopy.num)
+			active_powerups.append(power)
+			power.visible = True
+
+		for power in active_powerups.copy():
+			power.draw(screen, dt)
+			if not power.visible and not power.applied:
+				active_powerups.remove(power)
+				continue
+			elif power.visible:
+				if ball.collides(power):
+					res = power.apply(ball, [player1, player2])
+					ball, [player1, player2] = res
+			if power.time_remaining <= 0:
+				same_types = []
+				for pwr in active_powerups:
+					if pwr.power_type == power.power_type and id(power) != id(pwr) and pwr.time_remaining > 0:
+						same_types.append(pwr)
+				if len(same_types) == 0:
+					res = power.remove(ball, [player1, player2])
+					if res:
+						ball, [player1, player2] = res
+				active_powerups.remove(power)
+
+
 
 		match ball.point_scored():
 			case -1:
 				player2.score += 1
+				for power in active_powerups:
+					res = power.remove(ball, [player1, player2], True)
+					if res:
+						ball, [player1, player2] = res
+				active_powerups = []
 				ball.reset()
-				player1.reset()
-				player2.reset()
-				curr_server = "player2" if curr_server == "player1" else "player1"
+				player1 = Paddle(1)
+				player2 = Paddle(2)
+				curr_server = "Player 2" if curr_server == "Player 1" else "Player 1"
 				state = "serve"
 			case 1:
 				player1.score += 1
+				for power in active_powerups:
+					res = power.remove(ball, [player1, player2], True)
+					if res:
+						ball, [player1, player2] = res
+				active_powerups = []
 				ball.reset()
-				player1.reset()
-				player2.reset()
-				curr_server = "player2" if curr_server == "player1" else "player1"
+				player1 = Paddle(1)
+				player2 = Paddle(2)
+				curr_server = "Player 2" if curr_server == "Player 1" else "Player 1"
 				state = "serve"
 
 		player1.draw(screen)
@@ -149,7 +196,7 @@ while running:
 		if pygame.K_RETURN in keydown_keys:
 			player1 = Paddle(1)
 			player2 = Paddle(2)
-			curr_server = "player1"
+			curr_server = "Player 1"
 			state = "welcome"
 
 	pygame.display.flip()
