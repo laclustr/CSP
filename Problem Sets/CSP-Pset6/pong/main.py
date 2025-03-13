@@ -24,8 +24,8 @@ all_powerups = [
 	PowerUp("ball_speed_mul", 1.5),
 	PowerUp("paddle_size", 1.5),
 	PowerUp("paddle_size", 0.4),
-	PowerUp("paddle_speed", 0.2),
-	PowerUp("paddle_speed", 2)
+	PowerUp("paddle_speed", 0.78),
+	PowerUp("paddle_speed", 1.57)
 ]
 active_powerups = []
 
@@ -118,7 +118,7 @@ while running:
 		player1.update(dt, ai, ball)
 		player2.update(dt, ai, ball)
 
-		if use_powerup(active_powerups):
+		if use_powerup(active_powerups) and POWERUPS_ENABLED:
 			pwrcopy = random.choice(all_powerups)
 			power = PowerUp(pwrcopy.power_type, pwrcopy.num)
 			active_powerups.append(power)
