@@ -19,7 +19,6 @@ class PowerUp:
         self.rect.center = (-1, -1)
 
     def draw(self, screen, dt):
-        print(self.time_remaining) if self.applied else None
         self.time_remaining -= dt
         if self.rect.center == (-1, -1):
             self._set_pos()
