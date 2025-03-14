@@ -1,7 +1,4 @@
-from turtledemo.nim import SCREENWIDTH
-
 import pygame
-from sphinx.addnodes import centered
 
 from CONSTS import *
 
@@ -78,5 +75,4 @@ def draw_playing_menu(screen, board):
     board.draw(screen)
 
 if __name__ == "__main__":
-    import os
-    os.system("python3 main.py")
+    pass
