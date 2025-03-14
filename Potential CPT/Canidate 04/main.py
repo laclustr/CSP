@@ -3,7 +3,6 @@ from CONSTS import *
 from states import *
 from game import Board
 
-
 def main():
     pygame.init()
     screen = pygame.display.set_mode((DISPLAY_WIDTH, DISPLAY_HEIGHT))
