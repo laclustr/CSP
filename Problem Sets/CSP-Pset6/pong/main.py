@@ -153,12 +153,8 @@ while running:
 			active_powerups = []
 			ball.reset()
 
-			player1.reset_size()
-			player1.reset_speed()
-			player1.reset()
-			player2.reset_size()
-			player2.reset_speed()
-			player2.reset()
+			player1.reset_all()
+			player2.reset_all()
 
 			curr_server = "Player 2" if curr_server == "Player 1" else "Player 1"
 			state = "serve"

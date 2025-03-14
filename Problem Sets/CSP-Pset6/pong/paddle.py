@@ -1,5 +1,4 @@
 import pygame
-
 from settings import *
 
 class Paddle:
@@ -114,3 +113,8 @@ class Paddle:
 
     def reset_speed(self):
         self.speed = PADDLE_SPEED
+
+    def reset_all(self):
+        self.reset()
+        self.reset_size()
+        self.reset_speed()
