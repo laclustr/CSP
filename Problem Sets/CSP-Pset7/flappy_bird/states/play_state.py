@@ -4,9 +4,10 @@ from objects.pipe_pair import PipePair
 class PlayState:
     def __init__(self, state_machine):
         self.state_machine = state_machine
+        self.space_pressed = False
 
     def update(self, dt):
-        self.state_machine.last_pipe_gen += dt
+        if self.space_pressed: self.state_machine.last_pipe_gen += dt
         if self.state_machine.last_pipe_gen >= PIPE_SPACING:
             self.state_machine.last_pipe_gen = 0
             self.state_machine.pipe_list.append(PipePair())
@@ -38,9 +39,17 @@ class PlayState:
             if self.state_machine.background_pos <= -self.state_machine.background.width:
                 self.state_machine.background_pos += self.state_machine.background.width
 
-        self.state_machine.bird1.update(dt, self.state_machine.keysdown)
-        if self.state_machine.bird2:
-            self.state_machine.bird2.update(dt, self.state_machine.keysdown)
+        if self.space_pressed:
+            self.state_machine.bird1.update(dt, self.state_machine.keysdown)
+            if self.state_machine.bird2:
+                self.state_machine.bird2.update(dt, self.state_machine.keysdown)
+        elif pygame.K_SPACE in self.state_machine.keysdown or (pygame.K_UP in self.state_machine.keysdown and self.state_machine.bird2):
+            self.state_machine.bird1.update(dt, self.state_machine.keysdown)
+            if self.state_machine.bird2:
+                self.state_machine.bird2.update(dt, self.state_machine.keysdown)
+            self.space_pressed = True
+
+
 
     def draw(self):
         self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos, 0))

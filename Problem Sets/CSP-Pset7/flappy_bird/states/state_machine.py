@@ -35,7 +35,7 @@ class StateMachine:
             "highscore": HighScoreState
         }
 
-        self.curr_state = self.states["countdown"](self)
+        self.curr_state = self.states["menu"](self)
 
     def change_state(self, new_state):
         self.curr_state = self.states[new_state](self)
@@ -47,5 +47,14 @@ class StateMachine:
     def draw(self):
         self.curr_state.draw()
 
-    def two_players(self):
+    def two_player(self):
         self.bird2 = Bird(2)
+
+    def one_player(self):
+        self.bird2 = None
+
+    def reset_game(self):
+        self.bird1 = Bird(1)
+        self.bird2 = None
+        self.last_pipe_gen = 0
+        self.pipe_list = []

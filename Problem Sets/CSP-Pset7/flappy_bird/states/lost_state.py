@@ -1,4 +1,6 @@
 from utils.config import *
+import json
+import random
 
 class LoserState:
     def __init__(self, state_machine):
@@ -9,9 +11,25 @@ class LoserState:
         self.sel_idx = 0
         self.font_size = 60
         self.dt = 0
+        self.high_score = False
+        self.high_score_color = [255, 255, 255]
+        self.high_score_delay = 500
+        try:
+            with open("high_scores.json", "r") as f:
+                self.data = sorted(json.load(f), key=lambda score: score['score'], reverse=True)
+        except:
+            self.data = []
+        if not any(self.data) or self.state_machine.bird1.score > self.data[0]['score']:
+            self.high_score = True
 
     def update(self, dt):
         self.dt = dt
+
+        self.high_score_delay -= dt
+        if self.high_score_delay <= 0:
+            idx = random.randint(0, 2)
+            self.high_score_color[idx] = random.randint(0, 255)
+            self.high_score_delay = 500
 
         if self.scroll_speed > 0:
             self.scroll_speed -= SCROLL_SPEED_SLOWER
@@ -44,6 +62,18 @@ class LoserState:
                 if new_idx > len(self.initial_list) - 1:
                     new_idx = len(self.initial_list) - 1
                 self.sel_idx = new_idx
+
+        if pygame.K_ESCAPE in self.state_machine.keysdown:
+            self.state_machine.change_state("menu")
+
+        if pygame.K_RETURN in self.state_machine.keysdown:
+            self.data.append({
+                "initials": f"{self.initial_list[0]}{self.initial_list[1]}",
+                "score": self.state_machine.bird1.score
+            })
+            with open("high_scores.json", "w") as f:
+                json.dump(self.data, f)
+            self.state_machine.change_state("menu")
 
     def draw(self):
         self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos, 0))
@@ -80,3 +110,8 @@ class LoserState:
                     self.state_machine.font.print(self.state_machine.screen, f"{self.initial_list[initial]}", SCREEN_WIDTH // 3, SCREEN_HEIGHT - SCREEN_HEIGHT // 3)
                 elif initial == 1:
                     self.state_machine.font.print(self.state_machine.screen, f"{self.initial_list[initial]}", SCREEN_WIDTH - SCREEN_WIDTH // 3, SCREEN_HEIGHT - SCREEN_HEIGHT // 3)
+
+        if self.high_score:
+            self.state_machine.font.set_size(60)
+            self.state_machine.font.set_color(self.high_score_color)
+            self.state_machine.font.print(self.state_machine.screen, "NEW HIGH SCORE", SCREEN_WIDTH // 2, SCREEN_HEIGHT - SCREEN_HEIGHT // 8)
