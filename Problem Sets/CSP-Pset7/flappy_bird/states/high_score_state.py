@@ -42,7 +42,7 @@ class HighScoreState:
             medal = pygame.transform.scale_by(medal, 0.6)
             rect = medal.get_rect()
             rect.centery = (SCREEN_HEIGHT // 4 + score * self.state_machine.font.get_size()) - 2
-            rect.centerx = (SCREEN_WIDTH // 2) - (len(f"{self.top3[score]["initials"]}:{self.top3[score]["score"]}") // 2) * (self.state_machine.font.get_size() // 2) - 50
+            rect.centerx = (SCREEN_WIDTH // 2) - (len(f"{self.top3[score]["initials"]}:{self.top3[score]["score"]}") // 2) * (self.state_machine.font.get_size() // 2) - 60
             self.state_machine.screen.blit(medal, rect)
 
         self.state_machine.font.set_size(35)
