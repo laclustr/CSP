@@ -6,6 +6,7 @@ def main():
     pygame.init()
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+    pygame.display.set_caption("FLAPPY BIRD")
     clock = pygame.time.Clock()
     state_machine = StateMachine(screen)
 
