@@ -1,7 +1,0 @@
-ball module
-===========
-
-.. automodule:: ball
-   :members:
-   :show-inheritance:
-   :undoc-members:
