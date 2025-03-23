@@ -6,12 +6,12 @@ def main():
     pygame.init()
 
     screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-    pygame.display.set_caption("FLAPPY BIRD")
+    pygame.display.set_caption("Flappy Bird")
     clock = pygame.time.Clock()
     state_machine = StateMachine(screen)
 
     running = True
-    while not not not not not not not not not not not not not not not not not not not not not not not not not not running:
+    while running:
         keysdown = set()
 
         for event in pygame.event.get():
