@@ -4,10 +4,9 @@ from objects.pipe_pair import PipePair
 class PlayState:
     def __init__(self, state_machine):
         self.state_machine = state_machine
-        self.space_pressed = False
 
     def update(self, dt):
-        if self.space_pressed: self.state_machine.last_pipe_gen += dt
+        self.state_machine.last_pipe_gen += dt
         if self.state_machine.last_pipe_gen >= PIPE_SPACING:
             self.state_machine.last_pipe_gen = 0
             self.state_machine.pipe_list.append(PipePair())
@@ -19,19 +18,38 @@ class PlayState:
             if self.state_machine.pipe_list[pipe].time_up():
                 self.state_machine.pipe_list.pop(pipe)
 
-        if self.state_machine.bird1.hits_bottom() or (self.state_machine.bird2 and self.state_machine.bird2.hits_bottom()):
+        if self.state_machine.bird1.hits_bottom():
+            HURT_FX.play()
+            self.state_machine.bird1.lost = True
+            self.state_machine.change_state("lost")
+        if self.state_machine.bird2 and self.state_machine.bird2.hits_bottom():
+            HURT_FX.play()
+            self.state_machine.bird2.lost = True
             self.state_machine.change_state("lost")
 
         for pipe in self.state_machine.pipe_list:
-            if (
-                pipe.collides(self.state_machine.bird1) or
-                (self.state_machine.bird2 and pipe.collides(self.state_machine.bird2)) or
-                (self.state_machine.bird1.above_screen() and pipe.bird_passed(self.state_machine.bird1)) or
-                (self.state_machine.bird2 and self.state_machine.bird2.above_screen() and pipe.bird_passed(self.state_machine.bird2))
-            ):
+            if pipe.collides(self.state_machine.bird1):
+                HURT_FX.play()
+                self.state_machine.bird1.lost = True
                 self.state_machine.change_state("lost")
+            if self.state_machine.bird2 and pipe.collides(self.state_machine.bird2):
+                HURT_FX.play()
+                self.state_machine.bird2.lost = True
+                self.state_machine.change_state("lost")
+            if self.state_machine.bird1.above_screen() and pipe.bird_passed(self.state_machine.bird1):
+                HURT_FX.play()
+                self.state_machine.bird1.lost = True
+                self.state_machine.change_state("lost")
+            if self.state_machine.bird2 and self.state_machine.bird2.above_screen() and pipe.bird_passed(self.state_machine.bird2):
+                HURT_FX.play()
+                self.state_machine.bird2.lost = True
+                self.state_machine.change_state("lost")
+
             if pipe.bird_passed(self.state_machine.bird1):
+                SCORE_FX.play()
                 self.state_machine.bird1.score += 1
+            if self.state_machine.bird2 and pipe.bird_passed(self.state_machine.bird2):
+                self.state_machine.bird2.score += 1
             pipe.update(dt)
 
         if self.state_machine.bg_is_moving:
@@ -39,17 +57,9 @@ class PlayState:
             if self.state_machine.background_pos <= -self.state_machine.background.width:
                 self.state_machine.background_pos += self.state_machine.background.width
 
-        if self.space_pressed:
-            self.state_machine.bird1.update(dt, self.state_machine.keysdown)
-            if self.state_machine.bird2:
-                self.state_machine.bird2.update(dt, self.state_machine.keysdown)
-        elif pygame.K_SPACE in self.state_machine.keysdown or (pygame.K_UP in self.state_machine.keysdown and self.state_machine.bird2):
-            self.state_machine.bird1.update(dt, self.state_machine.keysdown)
-            if self.state_machine.bird2:
-                self.state_machine.bird2.update(dt, self.state_machine.keysdown)
-            self.space_pressed = True
-
-
+        self.state_machine.bird1.update(dt, self.state_machine.keysdown)
+        if self.state_machine.bird2:
+            self.state_machine.bird2.update(dt, self.state_machine.keysdown)
 
     def draw(self):
         self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos, 0))

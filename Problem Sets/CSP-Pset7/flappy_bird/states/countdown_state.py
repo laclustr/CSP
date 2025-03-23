@@ -14,6 +14,10 @@ class CountdownState:
 
         if self.time_left <= -1000:
             self.state_machine.change_state("playing")
+        if pygame.K_SPACE in self.state_machine.keysdown or (self.state_machine.bird2 and pygame.K_TAB in self.state_machine.keysdown):
+            self.state_machine.change_state("playing")
+            self.state_machine.bird1.update(dt, self.state_machine.keysdown)
+            if self.state_machine.bird2: self.state_machine.bird2.update(dt, self.state_machine.keysdown)
 
     def draw(self):
         self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos, 0))

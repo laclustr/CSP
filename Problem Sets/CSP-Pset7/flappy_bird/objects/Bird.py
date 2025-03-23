@@ -7,12 +7,14 @@ class Bird:
         self.image = pygame.image.load("assets/sprites/gameplay/bluebird-downflap.png").convert() if playernum == 1 else pygame.image.load("assets/sprites/gameplay/redbird-downflap.png").convert()
         self.rect = self.image.get_rect()
         self.rect.x = SCREEN_WIDTH // 3
-        self.rect.y = SCREEN_HEIGHT // 5 - playernum * 20
+        self.rect.y = SCREEN_HEIGHT // 2 - playernum * 25
+        self.lost = False
         self.velocity = 0
         self.gravity = BIRD_GRAVITY
         self.score = 0
 
     def _jump(self):
+        JUMP_FX.play()
         self.velocity = -JUMP_HEIGHT
 
     def update(self, dt, keys):

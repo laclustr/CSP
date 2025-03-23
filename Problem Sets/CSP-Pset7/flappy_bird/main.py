@@ -25,6 +25,7 @@ def main():
 
         pygame.display.flip()
 
+    pygame.quit()
+
 if __name__ == "__main__":
     main()
-    pygame.quit()

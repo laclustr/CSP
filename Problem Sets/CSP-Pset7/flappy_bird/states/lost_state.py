@@ -7,11 +7,12 @@ class LoserState:
         self.state_machine = state_machine
         self.scroll_speed = SCROLL_SPEED
         self.animation_time = SCROLL_SPEED / SCROLL_SPEED_SLOWER
+        self.two_player = True if self.state_machine.bird2 else False
         self.initial_list = ['A', 'A']
         self.sel_idx = 0
         self.font_size = 60
-        self.dt = 0
-        self.high_score = False
+        self.medal = None
+        self.high_score_place = None
         self.high_score_color = [255, 255, 255]
         self.high_score_delay = 500
         try:
@@ -20,10 +21,21 @@ class LoserState:
         except:
             self.data = []
         if not any(self.data) or self.state_machine.bird1.score > self.data[0]['score']:
-            self.high_score = True
+            self.medal = pygame.image.load("assets/sprites/medals/shaded_medal1.png").convert_alpha()
+            self.high_score_place = 1
+        elif len(self.data) == 1 or self.state_machine.bird1.score > self.data[1]['score']:
+            self.medal = pygame.image.load("assets/sprites/medals/shaded_medal2.png").convert_alpha()
+        elif len(self.data) == 2 or self.state_machine.bird1.score > self.data[2]['score']:
+            self.medal = pygame.image.load("assets/sprites/medals/shaded_medal3.png").convert_alpha()
+        if self.medal:
+            self.medal_rect = self.medal.get_rect()
+            self.medal_rect.centery = (SCREEN_HEIGHT // 4.1 - self.font_size)
+            self.medal_rect.centerx = (SCREEN_WIDTH // 2.2 - self.font_size) - 2
+
+        pygame.mixer.music.pause()
 
     def update(self, dt):
-        self.dt = dt
+        if self.animation_time > 0 and self.font_size < 120: self.font_size += dt / 15
 
         self.high_score_delay -= dt
         if self.high_score_delay <= 0:
@@ -64,16 +76,19 @@ class LoserState:
                 self.sel_idx = new_idx
 
         if pygame.K_ESCAPE in self.state_machine.keysdown:
+            pygame.mixer.music.play(-1)
             self.state_machine.change_state("menu")
 
         if pygame.K_RETURN in self.state_machine.keysdown:
-            self.data.append({
-                "initials": f"{self.initial_list[0]}{self.initial_list[1]}",
-                "score": self.state_machine.bird1.score
-            })
-            with open("high_scores.json", "w") as f:
-                json.dump(self.data, f)
+            if not self.two_player:
+                self.data.append({
+                    "initials": f"{self.initial_list[0]}{self.initial_list[1]}",
+                    "score": self.state_machine.bird1.score
+                })
+                with open("high_scores.json", "w") as f:
+                    json.dump(self.data, f)
             self.state_machine.change_state("menu")
+            pygame.mixer.music.play(-1)
 
     def draw(self):
         self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos, 0))
@@ -87,31 +102,40 @@ class LoserState:
             if self.state_machine.bird2:
                 self.state_machine.bird2.draw(self.state_machine.screen)
 
-        if self.animation_time > 0 and self.font_size < 120: self.font_size += self.dt / 15
-
         self.state_machine.font.set_color(WHITE)
         self.state_machine.font.set_size(int(self.font_size))
         self.state_machine.font.print(self.state_machine.screen, f"{self.state_machine.bird1.score}", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 8)
 
         if self.animation_time < 0:
-            self.state_machine.font.set_size(30)
+            if self.two_player:
+                self.state_machine.font.set_size(65)
+                if self.state_machine.bird1.lost and self.state_machine.bird2.lost:
+                    self.state_machine.font.print(self.state_machine.screen, f"Tie Game!", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3.5)
+                elif not self.state_machine.bird1.lost:
+                    self.state_machine.font.print(self.state_machine.screen, f"Player 1 Wins!", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3.5)
+                elif not self.state_machine.bird2.lost:
+                    self.state_machine.font.print(self.state_machine.screen, f"Player 2 Wins!", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3.5)
 
-            self.state_machine.font.print(self.state_machine.screen, f"Enter Your Initials", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3.5)
+            self.state_machine.font.set_size(30)
+            if not self.two_player: self.state_machine.font.print(self.state_machine.screen, f"Enter Your Initials", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3.5)
             self.state_machine.font.print(self.state_machine.screen, f"Press Return to Continue", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2.5)
 
-            for initial in range(len(self.initial_list)):
-                self.state_machine.font.set_size(180)
-                if self.sel_idx == initial:
-                    self.state_machine.font.set_color(BLUE)
-                else:
-                    self.state_machine.font.set_color(WHITE)
+            if not self.two_player:
+                for initial in range(len(self.initial_list)):
+                    self.state_machine.font.set_size(180)
+                    if self.sel_idx == initial:
+                        self.state_machine.font.set_color(BLUE)
+                    else:
+                        self.state_machine.font.set_color(WHITE)
 
-                if initial == 0:
-                    self.state_machine.font.print(self.state_machine.screen, f"{self.initial_list[initial]}", SCREEN_WIDTH // 3, SCREEN_HEIGHT - SCREEN_HEIGHT // 3)
-                elif initial == 1:
-                    self.state_machine.font.print(self.state_machine.screen, f"{self.initial_list[initial]}", SCREEN_WIDTH - SCREEN_WIDTH // 3, SCREEN_HEIGHT - SCREEN_HEIGHT // 3)
+                    if initial == 0:
+                        self.state_machine.font.print(self.state_machine.screen, f"{self.initial_list[initial]}", SCREEN_WIDTH // 3, SCREEN_HEIGHT - SCREEN_HEIGHT // 3)
+                    elif initial == 1:
+                        self.state_machine.font.print(self.state_machine.screen, f"{self.initial_list[initial]}", SCREEN_WIDTH - SCREEN_WIDTH // 3, SCREEN_HEIGHT - SCREEN_HEIGHT // 3)
 
-        if self.high_score:
-            self.state_machine.font.set_size(60)
-            self.state_machine.font.set_color(self.high_score_color)
-            self.state_machine.font.print(self.state_machine.screen, "NEW HIGH SCORE", SCREEN_WIDTH // 2, SCREEN_HEIGHT - SCREEN_HEIGHT // 8)
+        if self.medal:
+            self.state_machine.screen.blit(self.medal, self.medal_rect)
+            if self.high_score_place == 1:
+                self.state_machine.font.set_size(60)
+                self.state_machine.font.set_color(self.high_score_color)
+                self.state_machine.font.print(self.state_machine.screen, "NEW HIGH SCORE", SCREEN_WIDTH // 2, SCREEN_HEIGHT - SCREEN_HEIGHT // 8)

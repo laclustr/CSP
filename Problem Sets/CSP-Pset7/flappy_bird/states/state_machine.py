@@ -19,11 +19,14 @@ class StateMachine:
         self.background_pos = 0
         self.bg_is_moving = True
 
+        pygame.mixer.music.load("assets/audio/background.mp3")
+        pygame.mixer.music.play(-1)
+
         self.font = GameFont("assets/fonts/small_font.ttf")
         self.font.add_size("med", 60)
         self.font.add_size("lg", 150)
 
-        self.last_pipe_gen = 0
+        self.last_pipe_gen = PIPE_SPACING
         self.pipe_list = []
 
         self.states = {
@@ -48,13 +51,14 @@ class StateMachine:
         self.curr_state.draw()
 
     def two_player(self):
+        self.bird1 = Bird(1)
         self.bird2 = Bird(2)
 
     def one_player(self):
+        self.bird1 = Bird(1)
         self.bird2 = None
 
     def reset_game(self):
-        self.bird1 = Bird(1)
-        self.bird2 = None
-        self.last_pipe_gen = 0
+        self.last_pipe_gen = PIPE_SPACING
         self.pipe_list = []
+        self.space_pressed = False

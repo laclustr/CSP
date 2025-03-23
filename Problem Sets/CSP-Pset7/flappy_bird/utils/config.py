@@ -1,4 +1,5 @@
 import pygame
+pygame.mixer.init()
 
 # Display
 SCREEN_WIDTH = 640
@@ -9,13 +10,18 @@ SCROLL_SPEED = 0.5
 SCROLL_SPEED_SLOWER = 0.008
 COUNTDOWN_TIME = 3000
 
+# Sound Effects
+JUMP_FX = pygame.mixer.Sound("assets/audio/jump.wav")
+SCORE_FX = pygame.mixer.Sound("assets/audio/score.wav")
+HURT_FX = pygame.mixer.Sound("assets/audio/hurt.wav")
+
 # Pipes
 PIPE_WIDTH = 35
 PIPE_HEIGHT = 10000
 PIPE_SPEED = 0.5
 MIN_PIPE_DIST = 160
 MAX_MIN_HEIGHT = 100
-PIPE_SPACING = 2000 # in ms
+PIPE_SPACING = 1750 # in ms
 
 # Bird
 BIRD_RADIUS = 16

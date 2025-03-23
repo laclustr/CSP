@@ -27,7 +27,7 @@ class PipePair:
         return self.top_pipe.rect.colliderect(other.rect) or self.btm_pipe.rect.colliderect(other.rect)
 
     def bird_passed(self, bird):
-        if not self.passed_through and bird.rect.left >= self.top_pipe.rect.right:
+        if not self.passed_through and bird.rect.right >= self.top_pipe.rect.left:
             self.passed_through = True
             return True
         return False
