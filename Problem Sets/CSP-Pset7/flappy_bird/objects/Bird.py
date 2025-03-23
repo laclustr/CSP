@@ -21,7 +21,7 @@ class Bird:
         self.velocity += self.gravity
         self.rect.y += self.velocity * dt
         if pygame.K_SPACE in keys and self.player_num == 1: self._jump()
-        if pygame.K_UP in keys and self.player_num == 2: self._jump()
+        if pygame.K_TAB in keys and self.player_num == 2: self._jump()
         if self.rect.bottom > SCREEN_HEIGHT: self.rect.bottom = SCREEN_HEIGHT
 
     def draw(self, screen):

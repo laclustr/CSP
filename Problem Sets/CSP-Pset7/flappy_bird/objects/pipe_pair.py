@@ -8,8 +8,8 @@ class PipePair:
         gap = int(MIN_PIPE_DIST * random.uniform(1, 1.15))
         random_height = random.randint(MAX_MIN_HEIGHT + 50, SCREEN_HEIGHT - MAX_MIN_HEIGHT - gap)
         random_height -= random.randint(-100, 100)
-        self.top_pipe = Pipe(SCREEN_WIDTH + 100, random_height - 340, "top")
-        self.btm_pipe = Pipe(SCREEN_WIDTH + 100, random_height + gap, "btm")
+        self.top_pipe = Pipe(SCREEN_WIDTH + PIPE_OFFSET, random_height - PIPE_TOP_OFFSET, "top")
+        self.btm_pipe = Pipe(SCREEN_WIDTH + PIPE_OFFSET, random_height + gap, "btm")
         self.passed_through = False
 
     def update(self, dt):
@@ -27,7 +27,7 @@ class PipePair:
         return self.top_pipe.rect.colliderect(other.rect) or self.btm_pipe.rect.colliderect(other.rect)
 
     def bird_passed(self, bird):
-        if not self.passed_through and bird.rect.right >= self.top_pipe.rect.left:
+        if not self.passed_through and bird.rect.centerx >= self.top_pipe.rect.centerx:
             self.passed_through = True
             return True
         return False
