@@ -19,6 +19,9 @@ class CountdownState:
             self.state_machine.bird1.update(dt, self.state_machine.keysdown)
             if self.state_machine.bird2: self.state_machine.bird2.update(dt, self.state_machine.keysdown)
 
+        if pygame.K_ESCAPE in self.state_machine.keysdown:
+            self.state_machine.change_state("menu")
+
     def draw(self):
         self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos, 0))
         self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos + self.state_machine.background.width, 0))
