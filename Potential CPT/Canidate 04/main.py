@@ -11,7 +11,6 @@ def main():
     clock = pygame.time.Clock()
     running = True
     board = Board(N_ROWS, N_COLS, N_MINES)
-    font = pygame.font.Font(None, WIN_FONT_SIZE)
 
     game_state = "adjust"
 
