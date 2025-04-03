@@ -1,7 +1,6 @@
 for _ in range(50):
 	print("\n")
 input()
-
 print(
 """Welcome to the FFM (Fast File Manager)
 Press Return to Start""", end="")
