@@ -8,7 +8,7 @@ class Pipe:
         elif typ == "top":
             img = pygame.image.load("assets/sprites/gameplay/pipe-green.png").convert()
             self.image = pygame.transform.flip(img, False, True)
-        self.image = pygame.transform.scale(self.image, (self.image.width, self.image.height * 1.2))
+        self.image = pygame.transform.scale(self.image, (self.image.get_width(), int(self.image.get_height() * 1.2)))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
