@@ -23,8 +23,8 @@ class MenuState:
 
         if self.state_machine.bg_is_moving:
             self.state_machine.background_pos -= (SCROLL_SPEED * (dt // 5))
-            if self.state_machine.background_pos <= -self.state_machine.background.width:
-                self.state_machine.background_pos += self.state_machine.background.width
+            if self.state_machine.background_pos <= -self.state_machine.background.get_width():
+                self.state_machine.background_pos += self.state_machine.background.get_width()
 
         if pygame.K_DOWN in self.state_machine.keysdown:
             self.option_idx += 1
@@ -37,13 +37,13 @@ class MenuState:
 
     def draw(self):
         self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos, 0))
-        self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos + self.state_machine.background.width, 0))
+        self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos + self.state_machine.background.get_width(), 0))
 
         self.state_machine.font.set_color(WHITE)
-        self.state_machine.font.set_size(80)
+        self.state_machine.font.set_size("80")
         self.state_machine.font.print(self.state_machine.screen, f"FLAPPY BIRD", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 8)
 
-        self.state_machine.font.set_size(45)
+        self.state_machine.font.set_size("45")
         self.state_machine.font.set_color(BLUE) if self.sel_option == "1 PLAYER" else self.state_machine.font.set_color(WHITE)
         self.state_machine.font.print(self.state_machine.screen, f"1 PLAYER", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3)
 
@@ -60,7 +60,7 @@ class MenuState:
         rect.centerx = (SCREEN_WIDTH // 2) - (len(self.sel_option) // 2) * (self.state_machine.font.get_size() // 1.2)
         self.state_machine.screen.blit(cursor, rect)
 
-        self.state_machine.font.set_size(35)
+        self.state_machine.font.set_size("35")
         self.state_machine.font.set_color(WHITE)
         self.state_machine.font.print(self.state_machine.screen, "Press Return to Start", SCREEN_WIDTH // 2, SCREEN_HEIGHT - SCREEN_HEIGHT // 8)
 

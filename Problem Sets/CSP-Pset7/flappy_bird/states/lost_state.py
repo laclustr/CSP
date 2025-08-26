@@ -44,8 +44,8 @@ class LoserState:
         else:
             self.scroll_speed = 0
         self.state_machine.background_pos -= (self.scroll_speed * (dt // 5))
-        if self.state_machine.background_pos <= -self.state_machine.background.width:
-            self.state_machine.background_pos += self.state_machine.background.width
+        if self.state_machine.background_pos <= -self.state_machine.background.get_width():
+            self.state_machine.background_pos += self.state_machine.background.get_width()
 
         if self.animation_time > 0:
             self.animation_time -= SCROLL_SPEED_SLOWER * dt * 4
@@ -88,7 +88,7 @@ class LoserState:
 
     def draw(self):
         self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos, 0))
-        self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos + self.state_machine.background.width, 0))
+        self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos + self.state_machine.background.get_width(), 0))
 
         if self.animation_time > 0:
             for pipe in self.state_machine.pipe_list:
@@ -104,7 +104,7 @@ class LoserState:
 
         if self.animation_time < 0:
             if self.two_player:
-                self.state_machine.font.set_size(65)
+                self.state_machine.font.set_size("65")
                 if self.state_machine.bird1.lost and self.state_machine.bird2.lost:
                     self.state_machine.font.print(self.state_machine.screen, f"Tie Game!", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3.5)
                 elif not self.state_machine.bird1.lost:
@@ -112,13 +112,13 @@ class LoserState:
                 elif not self.state_machine.bird2.lost:
                     self.state_machine.font.print(self.state_machine.screen, f"Player 2 Wins!", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3.5)
 
-            self.state_machine.font.set_size(30)
+            self.state_machine.font.set_size("30")
             if not self.two_player: self.state_machine.font.print(self.state_machine.screen, f"Enter Your Initials", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 3.5)
             self.state_machine.font.print(self.state_machine.screen, f"Press Return to Continue", SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2.5)
 
             if not self.two_player:
                 for initial in range(len(self.initial_list)):
-                    self.state_machine.font.set_size(180)
+                    self.state_machine.font.set_size("180")
                     if self.sel_idx == initial:
                         self.state_machine.font.set_color(BLUE)
                     else:
@@ -135,6 +135,6 @@ class LoserState:
             medal_rect.centery = SCREEN_HEIGHT // 8 - 5
             self.state_machine.screen.blit(self.medal, medal_rect)
             if self.high_score_place == 1:
-                self.state_machine.font.set_size(60)
+                self.state_machine.font.set_size("med")
                 self.state_machine.font.set_color(self.high_score_color)
                 self.state_machine.font.print(self.state_machine.screen, "NEW HIGH SCORE", SCREEN_WIDTH // 2, SCREEN_HEIGHT - SCREEN_HEIGHT // 8)

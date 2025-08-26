@@ -1,5 +1,18 @@
 import pygame
-pygame.mixer.init()
+try:
+    pygame.mixer.init()
+except pygame.error:
+    # Audio not available (e.g., headless environment)
+    # Create mock audio objects
+    class MockSound:
+        def play(self): pass
+    pygame.mixer.Sound = lambda path: MockSound()
+    class MockMusic:
+        @staticmethod
+        def load(path): pass
+        @staticmethod
+        def play(loops): pass
+    pygame.mixer.music = MockMusic()
 
 # Display
 SCREEN_WIDTH = 640

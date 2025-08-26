@@ -25,6 +25,12 @@ class StateMachine:
         self.font = GameFont("assets/fonts/small_font.ttf")
         self.font.add_size("med", 60)
         self.font.add_size("lg", 150)
+        self.font.add_size("80", 80)
+        self.font.add_size("45", 45)
+        self.font.add_size("35", 35)
+        self.font.add_size("30", 30)
+        self.font.add_size("65", 65)
+        self.font.add_size("180", 180)
 
         self.last_pipe_gen = PIPE_SPACING
         self.pipe_list = []

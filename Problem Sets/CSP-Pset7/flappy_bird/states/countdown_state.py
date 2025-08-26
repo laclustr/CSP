@@ -9,8 +9,8 @@ class CountdownState:
     def update(self, dt):
         self.time_left -= dt
         self.state_machine.background_pos -= (SCROLL_SPEED * (dt // 5))
-        if self.state_machine.background_pos <= -self.state_machine.background.width:
-            self.state_machine.background_pos += self.state_machine.background.width
+        if self.state_machine.background_pos <= -self.state_machine.background.get_width():
+            self.state_machine.background_pos += self.state_machine.background.get_width()
 
         if self.time_left <= -1000:
             self.state_machine.change_state("playing")
@@ -24,7 +24,7 @@ class CountdownState:
 
     def draw(self):
         self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos, 0))
-        self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos + self.state_machine.background.width, 0))
+        self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos + self.state_machine.background.get_width(), 0))
 
         for pipe in self.state_machine.pipe_list:
             pipe.draw(self.state_machine.screen)

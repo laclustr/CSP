@@ -10,7 +10,7 @@ class PauseState:
 
     def draw(self):
         self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos, 0))
-        self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos + self.state_machine.background.width, 0))
+        self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos + self.state_machine.background.get_width(), 0))
 
         for pipe in self.state_machine.pipe_list:
             pipe.draw(self.state_machine.screen)

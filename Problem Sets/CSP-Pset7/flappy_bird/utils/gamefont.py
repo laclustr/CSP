@@ -82,20 +82,23 @@ class GameFont:
         Changes the size of the current font.
 
         Args:
-            size_label (str or int): A key corresponding to a font size in self.fonts.
+            size_label (str or int): A key corresponding to a font size in self.fonts, or an integer size.
 
         Raises:
             ValueError: If size_label is not found in self.fonts.
         """
-        if isinstance(size_label, str):
-            if size_label not in self.fonts:
-                raise ValueError(f"Size label must be one of {list(self.fonts)}. You passed set_size({size_label})")
+        if isinstance(size_label, int):
+            # Handle dynamic integer sizes by creating them on the fly
+            label = str(size_label)
+            if label not in self.fonts:
+                self.add_size(label, size_label)
+            size_label = label
+            
+        if size_label not in self.fonts:
+            raise ValueError(f"Size label must be one of {list(self.fonts)}. You passed set_size({size_label})")
 
-            self.curr_font = self.fonts[size_label]
-            self.curr_label = size_label
-        else:
-            self.add_size(f"{size_label}", size_label)
-            self.set_size(f"{size_label}")
+        self.curr_font = self.fonts[size_label]
+        self.curr_label = size_label
 
     def print(self, screen, message, x, y, antialiasing=False):
         """ 

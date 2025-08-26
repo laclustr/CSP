@@ -17,18 +17,18 @@ class HighScoreState:
 
         if self.state_machine.bg_is_moving:
             self.state_machine.background_pos -= (SCROLL_SPEED * (dt // 5))
-            if self.state_machine.background_pos <= -self.state_machine.background.width:
-                self.state_machine.background_pos += self.state_machine.background.width
+            if self.state_machine.background_pos <= -self.state_machine.background.get_width():
+                self.state_machine.background_pos += self.state_machine.background.get_width()
 
         if pygame.K_ESCAPE in self.state_machine.keysdown:
             self.state_machine.change_state("menu")
 
     def draw(self):
         self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos, 0))
-        self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos + self.state_machine.background.width, 0))
+        self.state_machine.screen.blit(self.state_machine.background, (self.state_machine.background_pos + self.state_machine.background.get_width(), 0))
 
         self.state_machine.font.set_color(WHITE)
-        self.state_machine.font.set_size(60)
+        self.state_machine.font.set_size("med")
         for score in range(len(self.top3)):
             self.state_machine.font.print(
                 self.state_machine.screen,
@@ -48,7 +48,7 @@ class HighScoreState:
             rect.centerx = (SCREEN_WIDTH // 2) - (len(f"{self.top3[score]["initials"]}:{self.top3[score]["score"]}") // 2) * (self.state_machine.font.get_size() // 2) - 60
             self.state_machine.screen.blit(medal, rect)
 
-        self.state_machine.font.set_size(35)
+        self.state_machine.font.set_size("35")
         self.state_machine.font.print(
             self.state_machine.screen,
             f"Press Return to Continue",
